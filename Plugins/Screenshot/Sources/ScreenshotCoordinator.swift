@@ -88,9 +88,16 @@ final class ScreenshotCoordinator {
             onStateChange?()
             guard generation == requestGeneration else { return }
             switch result {
-            case .success(let url):
-                let folderName = FileManager.default.displayName(atPath: url.deletingLastPathComponent().path)
-                environment.showToast(environment.format("record.saved", "录屏已保存到「%@」", folderName))
+            case .success(let outcome):
+                let folderName = FileManager.default.displayName(atPath: outcome.url.deletingLastPathComponent().path)
+                switch outcome.autoZoom {
+                case .notRequested, .applied:
+                    environment.showToast(environment.format("record.saved", "录屏已保存到「%@」", folderName))
+                case .skipped:
+                    environment.showToast(environment.format("record.savedZoomSkipped", "录屏已保存到「%@」，已跳过自动缩放", folderName))
+                case .failed:
+                    environment.showToast(environment.format("record.savedWithoutZoom", "录屏已保存到「%@」，自动缩放未生效", folderName))
+                }
             case .failure(let error):
                 guard !(error is CancellationError) else { return }
                 let message = error is RecordingError

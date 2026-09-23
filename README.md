@@ -95,7 +95,7 @@ Editing a direct shortcut highlights its key and shows a concise prompt beside D
 
 | Area | What you can do |
 | --- | --- |
-| Capture & clipboard | Annotate screenshots, use OCR and QR recognition, pin images, capture scrolling content, and record a region. Keep encrypted local clipboard history, snippets, and paste queues, with a default clipboard content limit of 30 MB per item. |
+| Capture & clipboard | Annotate screenshots, spotlight one area while dimming the rest, use OCR and QR recognition, pin images, capture scrolling content, and record a region with optional click-driven auto zoom. Keep encrypted local clipboard history, snippets, and paste queues, with a default clipboard content limit of 30 MB per item. |
 | Windows & workspace | Switch and arrange windows, launch apps, manage Stage Manager, and customize Finder's right-click menu. |
 | Keyboard, mouse & trackpad | Remap inputs, assign gestures and app shortcuts, tune scrolling, add middle-click, and type text with Auto Input. |
 | Displays & appearance | Adjust brightness and resolution, turn individual displays off, connect Sidecar, toggle True Tone and Night Shift, hide the notch, and organize menu bar icons and the Dock. |

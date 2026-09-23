@@ -123,9 +123,14 @@ final class OverlayWindow: NSPanel {
 }
 
 private enum Tool: Int {
-    case none, rect, ellipse, line, arrow, pen, text, tag, mosaic, blur
+    case none, rect, ellipse, line, arrow, pen, text, tag, mosaic, blur, spotlight
 
-    var usesStroke: Bool { self != .none && self != .mosaic && self != .blur }
+    var usesStroke: Bool {
+        switch self {
+        case .none, .mosaic, .blur, .spotlight: return false
+        case .rect, .ellipse, .line, .arrow, .pen, .text, .tag: return true
+        }
+    }
 }
 
 private enum Mode: Int { case shot = 0, ocr = 1, scroll = 2, record = 3 }
@@ -341,6 +346,13 @@ final class OverlayView: NSView, NSTextFieldDelegate, NSTextViewDelegate {
     private var widthButtons: [BarButton] = []
     private var mode: Mode = .shot
     private var recordBar: NSView!
+    private lazy var autoZoomToggle: NSButton = {
+        let button = NSButton(checkboxWithTitle: environment.string("overlay.record.autoZoom", "自动缩放"),
+                              target: self, action: #selector(toggleAutoZoom(_:)))
+        button.font = .systemFont(ofSize: 13)
+        button.setAccessibilityHelp(environment.string("overlay.record.autoZoomHelp", "录制结束后根据点击位置自动放大画面"))
+        return button
+    }()
     private var scrollBar: NSView!
     private var ocrPanel: NSView?
     private var ocrTextView: NSTextView?
@@ -413,6 +425,7 @@ final class OverlayView: NSView, NSTextFieldDelegate, NSTextViewDelegate {
         shadowSlider.doubleValue = Double(shadowSize)
         shadowLabel.stringValue = "\(Int(shadowSize))"
         radiusRow.isHidden = cornerRadius == 0 && shadowSize == 0
+        autoZoomToggle.state = environment.autoZoomEnabled ? .on : .off
         refreshShadowButtons()
         refreshStyleButtons()
         for button in modeButtons { button.isSelectedLook = button.tag == 0 }
@@ -945,6 +958,7 @@ final class OverlayView: NSView, NSTextFieldDelegate, NSTextViewDelegate {
         case .ellipse: return big ? .ellipse(r) : nil
         case .mosaic:  return big ? .mosaic(r) : nil
         case .blur:    return big ? .blur(r) : nil
+        case .spotlight: return big ? .spotlight(r) : nil
         case .line:    return far ? .line(from: a, to: p) : nil
         case .arrow:   return far ? .arrow(from: a, to: p) : nil
         case .none, .pen, .text, .tag: return nil
@@ -991,7 +1005,7 @@ final class OverlayView: NSView, NSTextFieldDelegate, NSTextViewDelegate {
         if editing, key == "{" { setShadow(shadowSize - 4); return }
         if editing, key == "}" { setShadow(shadowSize + 4); return }
         let shortcuts: [String: Tool] = ["r": .rect, "o": .ellipse, "l": .line, "a": .arrow, "p": .pen,
-                                         "t": .text, "n": .tag, "m": .mosaic, "b": .blur]
+                                         "t": .text, "n": .tag, "m": .mosaic, "b": .blur, "h": .spotlight]
         if editing, let t = shortcuts[key] { select(tool: t) } else { super.keyDown(with: event) }
     }
 
@@ -1131,9 +1145,13 @@ final class OverlayView: NSView, NSTextFieldDelegate, NSTextViewDelegate {
             title: environment.string("overlay.action.cancel", "取消"),
             action: #selector(cancel)
         )
-        recordBar = CaptureActionBar.make([start, cancel])
+        recordBar = CaptureActionBar.make([autoZoomToggle, start, cancel])
         recordBar.isHidden = true
         addSubview(recordBar)
+    }
+
+    @objc private func toggleAutoZoom(_ sender: NSButton) {
+        environment.autoZoomEnabled = sender.state == .on
     }
 
     private func sessionButton(
@@ -1201,7 +1219,8 @@ final class OverlayView: NSView, NSTextFieldDelegate, NSTextViewDelegate {
         }
         annotate.append(separator())
         for (symbol, t, tip) in [("checkerboard.rectangle", Tool.mosaic, environment.string("overlay.tool.mosaic", "马赛克 (M)")),
-                                ("aqi.medium", .blur, environment.string("overlay.tool.blur", "模糊 (B)"))] {
+                                ("aqi.medium", .blur, environment.string("overlay.tool.blur", "模糊 (B)")),
+                                ("rectangle.center.inset.filled", .spotlight, environment.string("overlay.tool.spotlight", "聚焦 (H)"))] {
             let button = iconButton(symbol, tip: tip, action: #selector(pickTool(_:)), tag: t.rawValue)
             toolButtons.append(button)
             annotate.append(button)

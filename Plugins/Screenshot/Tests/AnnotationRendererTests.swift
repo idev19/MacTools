@@ -54,6 +54,55 @@ final class AnnotationRendererTests: XCTestCase {
         }
     }
 
+    func testSpotlightDimsOnlyOutsideItsRoundedWindowsWithinTheSelection() throws {
+        let width = 200, height = 120
+        let context = try XCTUnwrap(CGContext(
+            data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0,
+            space: CGColorSpaceCreateDeviceRGB(),
+            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+        ))
+        context.setFillColor(CGColor.white)
+        context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+        let original = try XCTUnwrap(context.makeImage())
+        let renderer = AnnotationRenderer(image: original, scale: 1, size: NSSize(width: width, height: height))
+        let selection = NSRect(x: 20, y: 10, width: 160, height: 100)
+        let window = NSRect(x: 60, y: 40, width: 60, height: 40)
+        let stroke = Stroke(color: .white, width: 0)
+        // A second, overlapping window drafted mid-drag must not re-dim the shared area.
+        let draft = Item(shape: .spotlight(NSRect(x: 100, y: 60, width: 40, height: 30)), stroke: stroke)
+        let raster = try XCTUnwrap(renderer.render(
+            selection: selection, items: [Item(shape: .spotlight(window), stroke: stroke)], draft: draft,
+            radius: 0, shadowSize: 0, shadowColor: .black
+        ))
+        XCTAssertEqual(raster.image.width, 160)
+        XCTAssertEqual(raster.image.height, 100)
+        let output = try XCTUnwrap(CGContext(
+            data: nil, width: 160, height: 100, bitsPerComponent: 8, bytesPerRow: 0,
+            space: CGColorSpaceCreateDeviceRGB(),
+            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+        ))
+        output.draw(raster.image, in: CGRect(x: 0, y: 0, width: 160, height: 100))
+        let data = try XCTUnwrap(output.data)
+        // Bitmap rows run top-down from the selection's top edge; view points are bottom-up.
+        func brightness(atViewX x: CGFloat, y: CGFloat) -> CGFloat {
+            let column = Int(x - selection.minX)
+            let row = Int(selection.maxY - y)
+            let pixel = data.advanced(by: row * output.bytesPerRow + column * 4).assumingMemoryBound(to: UInt8.self)
+            XCTAssertEqual(pixel[3], 255)
+            return CGFloat(pixel[0]) / 255
+        }
+        let dimmed = 1 - AnnotationRenderer.spotlightDimAlpha
+        // Inside the window the pixels are untouched, including the overlap of both windows.
+        XCTAssertEqual(brightness(atViewX: 90, y: 60), 1, accuracy: 0.02)
+        XCTAssertEqual(brightness(atViewX: 110, y: 70), 1, accuracy: 0.02)
+        // The rest of the selection is dimmed by the spotlight alpha.
+        XCTAssertEqual(brightness(atViewX: 30, y: 20), dimmed, accuracy: 0.05)
+        XCTAssertEqual(brightness(atViewX: 170, y: 100), dimmed, accuracy: 0.05)
+        // Rounded corners: the window's exact corner pixel is outside the shape, its edge midpoint inside.
+        XCTAssertEqual(brightness(atViewX: 60.5, y: 40.5), dimmed, accuracy: 0.05)
+        XCTAssertEqual(brightness(atViewX: 90, y: 40.5), 1, accuracy: 0.02)
+    }
+
     private func decodedPayloads(_ image: CGImage) throws -> [String] {
         let request = VNDetectBarcodesRequest()
         request.symbologies = [.qr]

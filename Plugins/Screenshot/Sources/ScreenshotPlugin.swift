@@ -35,6 +35,7 @@ final class ScreenshotPlugin: MacToolsPlugin, PluginActionProviding, PluginActio
         static let execute = "execute"
         static let permission = "screen-recording"
         static let folder = "save-folder"
+        static let autoZoom = "auto-zoom"
     }
 
     let metadata: PluginMetadata
@@ -172,6 +173,19 @@ final class ScreenshotPlugin: MacToolsPlugin, PluginActionProviding, PluginActio
                     control: .action(title: environment.string("settings.folder.choose", "选择文件夹…"), role: .normal)
                 )]
             ),
+            PluginSettingsSection(
+                id: "recording",
+                title: environment.string("settings.recording.title", "录屏"),
+                systemImage: "record.circle",
+                footer: environment.string("settings.recording.description", "录制结束后处理视频，根据点击位置平滑放大再回到全画面；没有点击的录屏保持原样。"),
+                rows: [PluginSettingsRow(
+                    id: ID.autoZoom,
+                    title: environment.string("settings.autoZoom.title", "自动缩放"),
+                    description: environment.string("settings.autoZoom.description", "跟随点击位置放大画面，看清操作细节"),
+                    systemImage: "plus.magnifyingglass",
+                    control: .toggle(isOn: environment.autoZoomEnabled)
+                )]
+            ),
         ])
     }
 
@@ -286,10 +300,18 @@ final class ScreenshotPlugin: MacToolsPlugin, PluginActionProviding, PluginActio
     }
 
     func handleSettingsAction(_ action: PluginSettingsAction) {
-        guard isActive, case .invoke(ID.folder) = action,
-              let folder = folderPicker(environment.saveFolder), isActive, folder.isFileURL else { return }
-        environment.saveFolder = folder
-        onStateChange?()
+        guard isActive else { return }
+        switch action {
+        case .setBoolean(ID.autoZoom, let isOn):
+            environment.autoZoomEnabled = isOn
+            onStateChange?()
+        case .invoke(ID.folder):
+            guard let folder = folderPicker(environment.saveFolder), isActive, folder.isFileURL else { return }
+            environment.saveFolder = folder
+            onStateChange?()
+        default:
+            break
+        }
     }
 
     @discardableResult

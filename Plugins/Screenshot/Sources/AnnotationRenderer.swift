@@ -12,6 +12,8 @@ enum Shape {
     case redaction(NSRect)
     case mosaic(NSRect)
     case blur(NSRect)
+    /// Keeps this window at full brightness and dims the rest of the selection.
+    case spotlight(NSRect)
 }
 
 struct Stroke {
@@ -56,6 +58,13 @@ final class AnnotationRenderer {
 
     func clearCache() { blurCache.removeAll() }
 
+    static let spotlightDimAlpha: CGFloat = 0.55
+
+    /// Spotlight windows use a small fixed rounding that never exceeds half of the window.
+    static func spotlightRadius(for rect: NSRect) -> CGFloat {
+        max(0, min(10, min(rect.width, rect.height) / 2))
+    }
+
     static func shadowMargin(for shadowSize: CGFloat) -> CGFloat {
         shadowSize > 0 ? (shadowSize * 2 + shadowOffset(for: shadowSize)).rounded(.up) : 0
     }
@@ -86,10 +95,40 @@ final class AnnotationRenderer {
         }
         // Draft geometry changes every frame, so it must not grow the blur cache.
         if let draft { draw(draft, cache: false, selection: selection) }
+        // Spotlights dim everything outside their windows, including earlier marks.
+        drawSpotlights(items: items, draft: draft, selection: selection)
         // Blur and mosaic sample the frozen source; keep masks above those effects.
         for item in items {
             if case .redaction = item.shape { draw(item, cache: true, selection: selection) }
         }
+    }
+
+    /// All spotlight windows share one dimming layer, so overlapping windows stay clear.
+    private func drawSpotlights(items: [Item], draft: Item?, selection: NSRect) {
+        var windows = items.compactMap { item -> NSRect? in
+            if case .spotlight(let rect) = item.shape { return rect }
+            return nil
+        }
+        if let draft, case .spotlight(let rect) = draft.shape { windows.append(rect) }
+        guard !windows.isEmpty, let context = NSGraphicsContext.current?.cgContext else { return }
+        let area = selection.intersection(bounds)
+        guard area.width >= 1, area.height >= 1 else { return }
+        context.saveGState()
+        context.beginTransparencyLayer(in: area, auxiliaryInfo: nil)
+        context.setFillColor(NSColor.black.withAlphaComponent(Self.spotlightDimAlpha).cgColor)
+        context.fill(area)
+        // Punch the windows out of the dimming layer instead of relying on a winding rule.
+        context.setBlendMode(.destinationOut)
+        context.setFillColor(CGColor(gray: 0, alpha: 1))
+        for window in windows {
+            let rect = window.intersection(area)
+            guard rect.width >= 1, rect.height >= 1 else { continue }
+            let radius = Self.spotlightRadius(for: rect)
+            context.addPath(CGPath(roundedRect: rect, cornerWidth: radius, cornerHeight: radius, transform: nil))
+        }
+        context.fillPath()
+        context.endTransparencyLayer()
+        context.restoreGState()
     }
 
     private func draw(_ item: Item, cache: Bool, selection: NSRect) {
@@ -150,6 +189,9 @@ final class AnnotationRenderer {
             drawMosaic(in: r, selection: selection)
         case .blur(let r):
             drawBlur(in: r, cache: cache, selection: selection)
+        case .spotlight:
+            // Composited once for all windows by drawItems.
+            break
         }
     }
 

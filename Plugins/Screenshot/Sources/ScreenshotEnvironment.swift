@@ -39,6 +39,12 @@ final class ScreenshotEnvironment {
 
     var saveFolderDisplayName: String { FileManager.default.displayName(atPath: saveFolder.path) }
 
+    /// Region recordings zoom toward clicks after capture finishes; off unless the user opts in.
+    var autoZoomEnabled: Bool {
+        get { storage.bool(forKey: "recordAutoZoom") }
+        set { storage.set(newValue, forKey: "recordAutoZoom") }
+    }
+
     func string(_ key: String, _ defaultValue: String) -> String {
         localization.string(key, defaultValue: defaultValue)
     }

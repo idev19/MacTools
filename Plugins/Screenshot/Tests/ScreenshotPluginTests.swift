@@ -215,6 +215,26 @@ final class ScreenshotPluginTests: XCTestCase {
         XCTAssertEqual(picked, countBeforeDeactivation)
     }
 
+    func testAutoZoomSettingPersistsInPluginStorageAndIsShownAsAToggle() throws {
+        let storage = ScreenshotTestStorage()
+        let plugin = makePlugin(storage: storage)
+        let environment = ScreenshotEnvironment(context: PluginRuntimeContext(pluginID: "screenshot", storage: storage))
+        XCTAssertFalse(environment.autoZoomEnabled)
+        plugin.handleSettingsAction(.setBoolean(controlID: "auto-zoom", value: true))
+        XCTAssertTrue(environment.autoZoomEnabled)
+        guard case .form(let sections) = try XCTUnwrap(plugin.settingsPage).body else { return XCTFail("Expected a form") }
+        let rows = sections.flatMap { section -> [PluginSettingsRow] in
+            if case .rows(let rows) = section.content { return rows }
+            return []
+        }
+        let row = try XCTUnwrap(rows.first { $0.id == "auto-zoom" })
+        guard case .toggle(let isOn) = row.control else { return XCTFail("Expected a toggle") }
+        XCTAssertTrue(isOn)
+        plugin.deactivate(reason: .disabled)
+        plugin.handleSettingsAction(.setBoolean(controlID: "auto-zoom", value: false))
+        XCTAssertTrue(environment.autoZoomEnabled)
+    }
+
     private func makePlugin(
         storage: PluginStorage? = nil,
         screenAccess: @escaping @MainActor @Sendable () -> Bool = { true },

@@ -1,23 +1,43 @@
 import AppKit
+import AVFoundation
+import OSLog
 import ScreenCaptureKit
 import VideoToolbox
+
+/// A saved recording plus what happened to the optional auto zoom pass.
+struct RecordingOutcome: Sendable {
+    enum AutoZoom: Sendable {
+        case notRequested
+        case applied
+        /// Cancelled before it finished; the unprocessed recording is kept.
+        case skipped
+        case failed(any Error)
+    }
+
+    let url: URL
+    let autoZoom: AutoZoom
+}
 
 @available(macOS 15, *)
 @MainActor
 final class Recorder: NSObject, SCRecordingOutputDelegate {
-    var onFinish: ((Result<URL, Error>) -> Void)?
+    var onFinish: ((Result<RecordingOutcome, Error>) -> Void)?
     let region: CaptureRegion
     private let environment: ScreenshotEnvironment
     private let panel: CaptureStatusPanel
     private let outline: CaptureRegionOutlineWindow
     private let controls: CaptureControls
     private let url: URL
+    private let clickTracker: RecordingClickTracker?
     private var session: CaptureStreamSession?
     private var output: SCRecordingOutput?
+    private var codec: AVVideoCodecType?
     private var startupTask: Task<Void, Never>?
+    private var zoomTask: Task<Void, Never>?
     private var timer: Timer?
     private var startedAt: ContinuousClock.Instant?
     private lazy var lifecycle = RecordingLifecycle { [weak self] in self?.session?.stop() }
+    private static let logger = Logger(subsystem: "cc.ggbond.mactools.screenshot", category: "Recorder")
 
     init(region: CaptureRegion, environment: ScreenshotEnvironment) {
         self.region = region
@@ -26,6 +46,7 @@ final class Recorder: NSObject, SCRecordingOutputDelegate {
         panel = CaptureStatusPanel(primaryTitle: environment.string("record.stop", "停止"), indicatorColor: .systemRed)
         outline = CaptureRegionOutlineWindow(region: region)
         controls = CaptureControls([outline, panel])
+        clickTracker = environment.autoZoomEnabled ? RecordingClickTracker(region: region.globalRect) : nil
         super.init()
         panel.onPrimary = { [weak self] in self?.stop() }
     }
@@ -61,6 +82,7 @@ final class Recorder: NSObject, SCRecordingOutputDelegate {
                       recording.availableOutputFileTypes.contains(.mov) else {
                     throw RecordingError.unsupportedResolution
                 }
+                codec = recording.videoCodecType
                 let session = CaptureStreamSession(filter: filter, configuration: configuration)
                 self.session = session
                 session.onStopped = { [weak self, weak session] result in
@@ -91,13 +113,17 @@ final class Recorder: NSObject, SCRecordingOutputDelegate {
         lifecycle.stop()
     }
 
+    /// While auto zoom is being applied, cancelling keeps the already saved unprocessed recording.
     func cancel() {
         startupTask?.cancel()
+        zoomTask?.cancel()
         if session == nil { lifecycle.failBeforeCapture(CancellationError()) }
         else { lifecycle.cancel() }
     }
 
     func displayTopologyChanged() {
+        // Post-processing reads a finished file and no longer depends on the display.
+        guard zoomTask == nil else { return }
         do { try region.validate() } catch {
             outline.orderOut(nil)
             stop()
@@ -111,6 +137,7 @@ final class Recorder: NSObject, SCRecordingOutputDelegate {
             panel.update(environment.string("capture.preparing", "正在准备…"))
         case .recording:
             startedAt = .now
+            clickTracker?.start()
             panel.update("00:00")
             timer = Timer(timeInterval: 1, target: self, selector: #selector(updateElapsed), userInfo: nil, repeats: true)
             if let timer { RunLoop.main.add(timer, forMode: .common) }
@@ -137,10 +164,55 @@ final class Recorder: NSObject, SCRecordingOutputDelegate {
     private func finish(_ result: Result<URL, Error>) {
         timer?.invalidate()
         timer = nil
-        controls.hide()
+        clickTracker?.stop()
         if let output, let session { try? session.stream.removeRecordingOutput(output) }
         output = nil
         session = nil
+        switch result {
+        case .failure(let error):
+            complete(.failure(error))
+        case .success(let url):
+            guard let clickTracker, let codec, !clickTracker.clicks.isEmpty else {
+                complete(.success(RecordingOutcome(url: url, autoZoom: .notRequested)))
+                return
+            }
+            applyAutoZoom(to: url, plan: AutoZoomPlan(clicks: clickTracker.clicks), codec: codec)
+        }
+    }
+
+    /// The saved file is only replaced after the zoomed copy is complete; any failure keeps the original.
+    private func applyAutoZoom(to url: URL, plan: AutoZoomPlan, codec: AVVideoCodecType) {
+        panel.update(environment.string("record.zooming", "正在生成缩放效果…"), primaryEnabled: false)
+        let temporary = url.deletingLastPathComponent()
+            .appendingPathComponent(".\(url.deletingPathExtension().lastPathComponent).autozoom.mov")
+        zoomTask = Task { [weak self] in
+            let autoZoom: RecordingOutcome.AutoZoom
+            do {
+                try await AutoZoomComposer.render(source: url, to: temporary, plan: plan, codec: codec) { fraction in
+                    Task { @MainActor in self?.reportZoomProgress(fraction) }
+                }
+                try AutoZoomComposer.replace(url, with: temporary)
+                autoZoom = .applied
+            } catch is CancellationError {
+                autoZoom = .skipped
+            } catch {
+                Self.logger.error("Auto zoom failed: \(error.localizedDescription, privacy: .public)")
+                autoZoom = .failed(error)
+            }
+            guard let self else { return }
+            zoomTask = nil
+            complete(.success(RecordingOutcome(url: url, autoZoom: autoZoom)))
+        }
+    }
+
+    private func reportZoomProgress(_ fraction: Double) {
+        guard zoomTask != nil else { return }
+        let percent = Int((min(max(fraction, 0), 1) * 100).rounded())
+        panel.update(environment.format("record.zoomProgress", "正在生成缩放效果… %d%%", percent), primaryEnabled: false)
+    }
+
+    private func complete(_ result: Result<RecordingOutcome, Error>) {
+        controls.hide()
         let completion = onFinish
         onFinish = nil
         completion?(result)
