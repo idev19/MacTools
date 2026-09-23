@@ -613,6 +613,7 @@ public struct PluginPaletteSelectableRowModifier: ViewModifier {
     private let isSelected: Bool
     @State private var isHovered = false
     @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     public init(isSelected: Bool) {
         self.isSelected = isSelected
@@ -640,7 +641,7 @@ public struct PluginPaletteSelectableRowModifier: ViewModifier {
             }
             .contentShape(Rectangle())
             .onHover { isHovered = $0 }
-            .animation(.easeOut(duration: 0.1), value: isHovered)
+            .animation(PluginMotion.animation(.hover, reduceMotion: reduceMotion), value: isHovered)
     }
 
     private var rowBackground: Color {
@@ -675,6 +676,7 @@ private struct PluginPaletteToolbarControlStyleBody: View {
     let isEnabled: Bool
     @State private var isHovered = false
     @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         configuration.label
@@ -693,8 +695,11 @@ private struct PluginPaletteToolbarControlStyleBody: View {
                 }
             }
             .contentShape(RoundedRectangle(cornerRadius: 7, style: .continuous))
+            // Press feedback lands on the press itself, not on release.
+            .scaleEffect(configuration.isPressed && isEnabled && !reduceMotion ? 0.97 : 1)
             .onHover { isHovered = $0 }
-            .animation(.easeOut(duration: 0.1), value: isHovered)
+            .animation(PluginMotion.animation(.hover, reduceMotion: reduceMotion), value: isHovered)
+            .animation(PluginMotion.animation(.press, reduceMotion: reduceMotion), value: configuration.isPressed)
     }
 
     private var background: Color {

@@ -76,7 +76,7 @@ struct WindowModifierDragHUDView: View {
             x: 0,
             y: 2
         )
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.15), value: state)
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.15), value: state)
     }
 
     private var foregroundColor: Color {

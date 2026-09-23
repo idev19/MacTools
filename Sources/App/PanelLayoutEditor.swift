@@ -136,7 +136,7 @@ struct PanelLayoutEditor: View {
         .overlay(alignment: .topLeading) {
             PanelLayoutInsertionMarker(preview: session.dragPreview)
         }
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.14), value: positions)
+        .animation(PluginMotion.animation(.move, reduceMotion: reduceMotion), value: positions)
         .environment(\.layoutDirection, .leftToRight)
     }
 
@@ -378,7 +378,7 @@ private struct PanelLayoutReorderItem<Content: View>: View {
         }
         // Retire the previous owner immediately, so fast scrolling never stacks
         // fading toolbars. Only the new owner's entrance is animated.
-        .animation(showsControls && !reduceMotion ? .easeOut(duration: 0.12) : nil, value: showsControls)
+        .animation(showsControls ? PluginMotion.animation(.hover, reduceMotion: reduceMotion) : nil, value: showsControls)
         .overlay {
             PanelLayoutDragSource(id: id, title: title, icon: icon, showsControls: showsControls,
                                   isDraggable: true, rightToLeft: layoutDirection == .rightToLeft, hover: hover, nativeSource: nativeSource, begin: beginDrag, end: endDrag)

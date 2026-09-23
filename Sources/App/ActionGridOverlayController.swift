@@ -434,7 +434,7 @@ struct ActionGridOverlayAccessibilityPolicy: Equatable {
     let reduceMotion: Bool
     let reduceTransparency: Bool
 
-    var animatesSelection: Bool { !reduceMotion }
+    var animatesPointerHover: Bool { !reduceMotion }
     var usesMaterialBackground: Bool { !reduceTransparency }
 }
 
@@ -1337,12 +1337,9 @@ private struct ActionGridOverlayView: View {
                 )
                 .allowsHitTesting(false)
         }
+        // Keyboard selection repeats constantly and lands instantly; only pointer hover eases.
         .animation(
-            accessibilityPolicy.animatesSelection ? .easeOut(duration: 0.16) : nil,
-            value: model.selectedIndex
-        )
-        .animation(
-            accessibilityPolicy.animatesSelection ? .easeOut(duration: 0.12) : nil,
+            accessibilityPolicy.animatesPointerHover ? PluginMotion.hover : nil,
             value: hoveredSlot
         )
         .accessibilityElement(children: .contain)

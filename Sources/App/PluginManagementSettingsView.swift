@@ -3,6 +3,7 @@ import MacToolsPluginKit
 
 struct PluginManagementSettingsView: View {
     let pluginHost: PluginHost
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @StateObject private var presentation: PluginMarketplacePresentationModel
     @ObservedObject var navigationCoordinator: SettingsNavigationCoordinator
     @ObservedObject var uninstallConfirmationSession: PluginUninstallConfirmationSession
@@ -241,7 +242,7 @@ struct PluginManagementSettingsView: View {
         activeSearchTarget = target
 
         DispatchQueue.main.async {
-            withAnimation(.easeOut(duration: 0.2)) {
+            withAnimation(PluginMotion.animation(.scroll, reduceMotion: reduceMotion)) {
                 proxy.scrollTo(target.scrollID, anchor: .center)
             }
         }
@@ -452,7 +453,7 @@ struct PluginManagementSettingsView: View {
         bulkUpdateProgressHideTask?.cancel()
         bulkUpdateProgressText = text
 
-        withAnimation(.easeOut(duration: 0.15)) {
+        withAnimation(PluginMotion.animation(.reveal, reduceMotion: reduceMotion)) {
             bulkUpdateProgressOpacity = 1
         }
     }
@@ -460,11 +461,18 @@ struct PluginManagementSettingsView: View {
     private func scheduleBulkUpdateProgressFadeOut() {
         bulkUpdateProgressHideTask?.cancel()
         bulkUpdateProgressHideTask = Task {
-            withAnimation(.easeOut(duration: 2)) {
+            // Keep the completion text readable, then let it leave quickly.
+            try? await Task.sleep(for: .seconds(1.6))
+
+            guard !Task.isCancelled else {
+                return
+            }
+
+            withAnimation(PluginMotion.animation(.reveal, reduceMotion: reduceMotion)) {
                 bulkUpdateProgressOpacity = 0
             }
 
-            try? await Task.sleep(for: .seconds(2))
+            try? await Task.sleep(for: .seconds(PluginMotion.Duration.reveal))
 
             guard !Task.isCancelled else {
                 return
@@ -509,7 +517,7 @@ struct PluginManagementSettingsView: View {
     private func hideBulkUpdateProgressText() {
         bulkUpdateProgressHideTask?.cancel()
 
-        withAnimation(.easeOut(duration: 0.2)) {
+        withAnimation(PluginMotion.animation(.reveal, reduceMotion: reduceMotion)) {
             bulkUpdateProgressOpacity = 0
         }
 

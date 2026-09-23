@@ -448,8 +448,9 @@ final class MenuBarPanelTabStripView: NSView, NSDraggingSource {
 
     private func layoutTabs(animated: Bool) {
         NSAnimationContext.runAnimationGroup { context in
-            context.duration = animated && !reduceMotion ? 0.16 : 0
-            context.timingFunction = CAMediaTimingFunction(name: .easeOut)
+            // Tabs reflow around the dragged one, so they move rather than enter.
+            context.duration = animated && !reduceMotion ? PluginMotion.Duration.move : 0
+            context.timingFunction = PluginMotion.CoreAnimation.easeInOut
             for (index, id) in previewIDs.enumerated() {
                 guard let cell = cells[id] else { continue }
                 cell.animator().frame = MenuBarPanelTabLayout.frame(at: index, width: tabWidth)

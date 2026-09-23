@@ -674,7 +674,8 @@ final class WindowSwitcherOverlayController: NSObject, NSWindowDelegate, NSTable
         searchSurface.isHidden = false
         inlineSearchMinimumWidth.constant = 150
         NSAnimationContext.runAnimationGroup { context in
-            context.duration = NSWorkspace.shared.accessibilityDisplayShouldReduceMotion ? 0 : 0.18
+            // Command-F toggles this many times a day; keyboard-driven changes land instantly.
+            context.duration = 0
             context.allowsImplicitAnimation = true
             inlineSearchWidth.constant = 240
             panel.contentView?.layoutSubtreeIfNeeded()
@@ -695,7 +696,8 @@ final class WindowSwitcherOverlayController: NSObject, NSWindowDelegate, NSTable
         showsSearchTransition = false
         inlineSearchMinimumWidth.constant = 0
         NSAnimationContext.runAnimationGroup { context in
-            context.duration = NSWorkspace.shared.accessibilityDisplayShouldReduceMotion ? 0 : 0.18
+            // Command-F toggles this many times a day; keyboard-driven changes land instantly.
+            context.duration = 0
             context.allowsImplicitAnimation = true
             inlineSearchWidth.constant = 0
             panel.contentView?.layoutSubtreeIfNeeded()

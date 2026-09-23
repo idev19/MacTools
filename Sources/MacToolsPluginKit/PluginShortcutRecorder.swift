@@ -49,13 +49,15 @@ private final class PluginShortcutRecorderDisplayState: ObservableObject {
     @Published private(set) var isShaking = false
 
     func triggerShake(conflict: String? = nil) {
-        withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
+        withAnimation(PluginMotion.animation(.reveal, reduceMotion: PluginMotion.CoreAnimation.reduceMotion)) {
             showEscHint = true
             if let conflict {
                 conflictMessage = conflict
             }
         }
 
+        // Reduce Motion keeps the message and skips the shake.
+        guard !PluginMotion.CoreAnimation.reduceMotion else { return }
         isShaking = true
         let steps: [(CGFloat, Double)] = [
             (10, 0.00), (-8, 0.06), (7, 0.12), (-5, 0.18), (3, 0.24), (0, 0.30)
@@ -407,6 +409,7 @@ private struct PluginShortcutRecorderButton: View {
 
 private struct PluginShortcutRecorderPopoverView: View {
     @ObservedObject var displayState: PluginShortcutRecorderDisplayState
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(spacing: 0) {
@@ -439,7 +442,7 @@ private struct PluginShortcutRecorderPopoverView: View {
                 }
                 .font(PluginSettingsTheme.Typography.statusBadge)
                 .padding(.top, PluginSettingsTheme.Spacing.controlCluster)
-                .transition(.asymmetric(
+                .transition(reduceMotion ? .opacity : .asymmetric(
                     insertion: .opacity.combined(with: .offset(y: -6)),
                     removal: .opacity
                 ))

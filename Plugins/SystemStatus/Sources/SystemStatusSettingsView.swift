@@ -684,7 +684,7 @@ private struct SystemStatusMenuBarMetricEditorView: View {
     }
 
     private func toggleExpansion(_ kind: SystemStatusMetricKind) {
-        withAnimation(.easeInOut(duration: 0.16)) {
+        withAnimation(.easeOut(duration: 0.16)) {
             expandedKind = expandedKind == kind ? nil : kind
         }
     }

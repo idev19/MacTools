@@ -120,7 +120,7 @@ struct ZshConfigEditorView: View {
     private func contentTabButton(_ tab: ContentTab) -> some View {
         let isSelected = contentTab == tab
         return Button {
-            withAnimation(.easeInOut(duration: 0.15)) {
+            withAnimation(.easeOut(duration: 0.15)) {
                 contentTab = tab
             }
         } label: {
@@ -202,7 +202,7 @@ struct ZshConfigEditorView: View {
             }
             Spacer()
             Button {
-                withAnimation(.easeInOut(duration: 0.15)) { showFileInfo.toggle() }
+                withAnimation(.easeOut(duration: 0.15)) { showFileInfo.toggle() }
             } label: {
                 Image(systemName: showFileInfo ? "info.circle.fill" : "info.circle")
                     .pluginSettingsRowIconStyle(showFileInfo ? Color.accentColor : .secondary)
@@ -389,7 +389,7 @@ struct ZshConfigEditorView: View {
                     .foregroundStyle(.secondary)
                 Spacer()
                 Button {
-                    withAnimation(.easeInOut(duration: 0.15)) { contentTab = .editor }
+                    withAnimation(.easeOut(duration: 0.15)) { contentTab = .editor }
                 } label: {
                     Text(localization.string("editor.quickInsert.switchToEditor", defaultValue: "切换到编辑器"))
                         .font(PluginSettingsTheme.Typography.rowDescription)
@@ -422,7 +422,7 @@ struct ZshConfigEditorView: View {
     private func snippetRow(snippet: ZshSnippet) -> some View {
         let isActive = activeSnippet?.id == snippet.id
         return Button {
-            withAnimation(.easeInOut(duration: 0.15)) {
+            withAnimation(.easeOut(duration: 0.15)) {
                 if isActive {
                     activeSnippet = nil
                     snippetInput = ""
@@ -448,7 +448,7 @@ struct ZshConfigEditorView: View {
                     .font(PluginSettingsTheme.Typography.statusBadge)
                     .foregroundStyle(.tertiary)
                     .rotationEffect(.degrees(isActive ? 90 : 0))
-                    .animation(.easeInOut(duration: 0.2), value: isActive)
+                    .animation(.easeOut(duration: 0.2), value: isActive)
             }
             .pluginSettingsListRowPadding()
             .contentShape(Rectangle())
@@ -649,13 +649,13 @@ struct ZshConfigEditorView: View {
                     }
                 }
             }
-            withAnimation(.easeInOut(duration: 0.2)) {
+            withAnimation(.easeOut(duration: 0.2)) {
                 isRunningSource = false
                 sourceResult = succeeded
             }
             try? await Task.sleep(for: .seconds(3))
             guard sourceResultToken == token else { return }
-            withAnimation(.easeInOut(duration: 0.2)) {
+            withAnimation(.easeOut(duration: 0.2)) {
                 sourceResult = nil
             }
         }
@@ -685,7 +685,7 @@ struct ZshConfigEditorView: View {
         guard !snippetInput.isEmpty else { return }
         store.appendSnippet(snippet.buildContent(snippetInput))
         scrollToBottomID += 1
-        withAnimation(.easeInOut(duration: 0.15)) {
+        withAnimation(.easeOut(duration: 0.15)) {
             activeSnippet = nil
             snippetInput = ""
             contentTab = .editor

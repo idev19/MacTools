@@ -293,7 +293,7 @@ private struct PanelComponentLibraryCloseButtonStyle: ButtonStyle {
                 .foregroundStyle(Color.secondary)
                 .opacity(configuration.isPressed ? 0.8 : (isHovered ? 1 : 0.65))
                 .contentShape(Circle())
-                .animation(reduceMotion ? nil : .easeOut(duration: 0.12), value: isHovered)
+                .animation(PluginMotion.animation(.hover, reduceMotion: reduceMotion), value: isHovered)
                 .onHover { isHovered = $0 }
         }
     }
@@ -326,9 +326,9 @@ private struct PanelComponentLibraryPreviewButtonStyle: ButtonStyle {
                         .allowsHitTesting(false)
                 }
                 .contentShape(shape)
-                .scaleEffect(configuration.isPressed && !reduceMotion ? 0.985 : 1)
-                .animation(reduceMotion ? nil : .easeOut(duration: 0.12), value: isHovered)
-                .animation(reduceMotion ? nil : .easeOut(duration: 0.12), value: configuration.isPressed)
+                .scaleEffect(configuration.isPressed && !reduceMotion ? 0.97 : 1)
+                .animation(PluginMotion.animation(.hover, reduceMotion: reduceMotion), value: isHovered)
+                .animation(PluginMotion.animation(.press, reduceMotion: reduceMotion), value: configuration.isPressed)
                 .onHover { isHovered = $0 }
         }
 

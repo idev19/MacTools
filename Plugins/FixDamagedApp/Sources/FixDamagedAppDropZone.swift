@@ -97,7 +97,7 @@ struct FixDropZoneView: View {
         .onDrop(of: [.fileURL], isTargeted: $isTargeted) { providers in
             handleDrop(providers: providers)
         }
-        .animation(.easeInOut(duration: 0.15), value: isTargeted)
+        .animation(.easeOut(duration: 0.15), value: isTargeted)
     }
 
     @ViewBuilder
@@ -109,7 +109,8 @@ struct FixDropZoneView: View {
                     .font(.system(size: 34, weight: .light))
                     .foregroundStyle(isTargeted ? Color.accentColor : .secondary)
                     .scaleEffect(isTargeted ? 1.15 : 1.0)
-                    .animation(.spring(response: 0.25, dampingFraction: 0.6), value: isTargeted)
+                    // Drop targeting carries no momentum, so the icon settles without bouncing.
+                    .animation(.spring(response: 0.25, dampingFraction: 1), value: isTargeted)
 
                 Text(localization.string("dropZone.waiting", defaultValue: "将 .app 文件拖到此处以修复"))
                     .font(.system(size: 13, weight: .medium))

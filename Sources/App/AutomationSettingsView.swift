@@ -86,6 +86,7 @@ private struct WorkflowKeyboardBoundaryMoveModifier: ViewModifier {
 
 struct AutomationSettingsView: View {
     @Environment(\.layoutDirection) private var layoutDirection
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @ObservedObject private var pluginHost: PluginHost
     @ObservedObject private var automation: AutomationController
     @ObservedObject private var navigationCoordinator: SettingsNavigationCoordinator
@@ -365,7 +366,7 @@ struct AutomationSettingsView: View {
             return
         }
         let workflowID = automation.workflows[move.sourceIndex].id
-        withAnimation(.easeInOut(duration: 0.18)) {
+        withAnimation(PluginMotion.animation(.move, reduceMotion: reduceMotion)) {
             automation.moveWorkflow(id: workflowID, offset: move.offset)
         }
         NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .now)
@@ -378,7 +379,7 @@ struct AutomationSettingsView: View {
               sourceIndex != destinationIndex else {
             return
         }
-        withAnimation(.easeInOut(duration: 0.18)) {
+        withAnimation(PluginMotion.animation(.move, reduceMotion: reduceMotion)) {
             automation.moveWorkflow(id: workflowID, offset: destinationIndex - sourceIndex)
         }
         NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .now)

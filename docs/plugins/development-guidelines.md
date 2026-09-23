@@ -69,6 +69,17 @@ Use semantic fonts, SF Symbols, native bordered buttons, small control sizes, an
 
 Respect the user's layout, appearance, accessibility, and system preferences. Check the themes, keyboard/focus behavior, labels, and loading/error/empty states affected by the change. Visual-only changes normally use screenshots and manual verification; state transitions and actions need focused behavior coverage only where existing tests leave a gap. Keep copy brief and user-facing.
 
+### Motion
+
+`PluginMotion` (MacToolsPluginKit) is the shared motion vocabulary for host surfaces and PluginKit components. Decide in this order before animating:
+
+1. **Should it animate?** Actions repeated constantly, such as keyboard selection in a palette, shortcut-driven toggles, and window switching, do not animate. Hover states animate only as quick color changes. Modals, disclosures, drawers, and toasts use standard motion; rare moments may add a little delight.
+2. **Which curve?** Entrances, exits, and disclosures use `.reveal` (strong ease-out, 180 ms) so the response is visible immediately. Elements that stay on screen while they reorder use `.move` (strong ease-in-out, 200 ms). Hover and color-only changes use `.hover` (100 ms). Pressed controls use `.press` (120 ms) and scale to 0.97. Anything the user can grab uses `.spring`, which is critically damped; reserve `.momentum` for a release that carried velocity. Never ease in on interface motion, and keep every duration under 300 ms.
+3. **Reduce Motion.** Route animations through `PluginMotion.animation(_:reduceMotion:)` and transitions through `PluginMotion.revealTransition` / `popoverTransition`, which keep the cross-fade and drop the movement. AppKit code uses `PluginMotion.CoreAnimation.duration(_:)` and the timing functions.
+4. **Physicality.** Popovers grow from their trigger, not from the center, and nothing appears from `scale(0)`. Enter and exit along the same edge.
+
+Plugin packages keep literal curves that follow the same rules until their `minHostVersion` covers a host that ships `PluginMotion`; adopting the type earlier would fail to load on older hosts.
+
 ## Performance and energy
 
 Separate **collection**, **presentation**, and **host metadata updates**. Low energy use must not silently reduce the accuracy of an enabled monitor.

@@ -122,6 +122,7 @@ private enum ActivityBarFunFact {
 }
 
 struct ActivityBarComponentView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     private static let claudeColor = Color(red: 0xCB / 255.0, green: 0x64 / 255.0, blue: 0x41 / 255.0)
     private static let codexColor = Color(red: 0x10 / 255.0, green: 0xA3 / 255.0, blue: 0x7F / 255.0)
     static let visibleCodingTools: [ActivityBarCodingTool] = [.claudeCode, .cursor, .codex]
@@ -262,10 +263,10 @@ struct ActivityBarComponentView: View {
                 style: .continuous
             )
         )
-        .animation(.easeInOut(duration: 0.2), value: statsExpanded)
-        .animation(.easeInOut(duration: 0.2), value: chartRange)
-        .animation(.easeInOut(duration: 0.2), value: presentation.trendMode)
-        .animation(.easeInOut(duration: 0.15), value: presentation.selectedDateOffset)
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.2), value: statsExpanded)
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.2), value: chartRange)
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.2), value: presentation.trendMode)
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.15), value: presentation.selectedDateOffset)
         .onAppear {
             presentation.selectInitialTrend(hasCodingToolsData: hasCodingToolsData)
         }
@@ -281,7 +282,7 @@ struct ActivityBarComponentView: View {
 
             HStack(spacing: 4) {
                 Button {
-                    withAnimation(.easeInOut(duration: 0.15)) {
+                    withAnimation(.easeOut(duration: 0.15)) {
                         presentation.selectedDateOffset -= 1
                         presentation.expandedAppName = nil
                     }
@@ -301,7 +302,7 @@ struct ActivityBarComponentView: View {
                     .lineLimit(1)
 
                 Button {
-                    withAnimation(.easeInOut(duration: 0.15)) {
+                    withAnimation(.easeOut(duration: 0.15)) {
                         presentation.selectedDateOffset += 1
                         presentation.expandedAppName = nil
                     }
@@ -612,7 +613,7 @@ struct ActivityBarComponentView: View {
 
         return VStack(spacing: 3) {
             Button {
-                withAnimation(.easeInOut(duration: 0.15)) {
+                withAnimation(.easeOut(duration: 0.15)) {
                     presentation.expandedAppName = isExpanded ? nil : name
                 }
             } label: {
@@ -697,7 +698,7 @@ struct ActivityBarComponentView: View {
 
                 ForEach(ActivityBarTrendMode.allCases, id: \.self) { mode in
                     Button {
-                        withAnimation(.easeInOut(duration: 0.15)) {
+                        withAnimation(.easeOut(duration: 0.15)) {
                             presentation.trendMode = mode
                             hoveredDate = nil
                         }
@@ -1032,7 +1033,7 @@ struct ActivityBarComponentView: View {
         HStack(spacing: 0) {
             ForEach(ActivityBarChartRange.allCases, id: \.self) { range in
                 Button {
-                    withAnimation(.easeInOut(duration: 0.15)) {
+                    withAnimation(.easeOut(duration: 0.15)) {
                         chartRange = range
                         hoveredDate = nil
                         hoveredScreenTimeDate = nil

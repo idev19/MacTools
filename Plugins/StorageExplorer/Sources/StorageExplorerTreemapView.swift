@@ -51,7 +51,7 @@ struct StorageExplorerTreemapView: View {
                         .transition(.opacity)
                 }
             }
-            .animation(.easeInOut(duration: 0.14), value: selection)
+            .animation(.easeOut(duration: 0.14), value: selection)
             .overlay(alignment: .topTrailing) {
                 if let row = hoveredTile?.row {
                     VStack(alignment: .leading, spacing: 3) {

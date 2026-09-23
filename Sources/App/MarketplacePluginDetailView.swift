@@ -40,6 +40,7 @@ struct MarketplacePluginDetailPresentation: Equatable {
 }
 
 struct MarketplacePluginDetailView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @ObservedObject var pluginHost: PluginHost
     @ObservedObject var navigationCoordinator: SettingsNavigationCoordinator
     let target: MarketplacePluginDetailTarget
@@ -419,7 +420,7 @@ struct MarketplacePluginDetailView: View {
     ) {
         guard let highlight = presentation.highlightedAction else { return }
         DispatchQueue.main.async {
-            withAnimation(.easeOut(duration: 0.2)) {
+            withAnimation(PluginMotion.animation(.scroll, reduceMotion: reduceMotion)) {
                 proxy.scrollTo(actionScrollID(providerID: highlight.providerID, actionID: highlight.actionID), anchor: .center)
             }
             highlightedActionID = actionScrollID(

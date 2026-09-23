@@ -930,7 +930,8 @@ private struct StorageExplorerTreemapUpdateEffect: View {
             .compositingGroup()
             .onAppear {
                 guard !reduceMotion else { return }
-                withAnimation(.linear(duration: 1.45).repeatForever(autoreverses: false)) {
+                // A quicker sweep makes the same wait feel shorter.
+                withAnimation(.linear(duration: 1).repeatForever(autoreverses: false)) {
                     sweepToTrailingEdge = true
                 }
             }

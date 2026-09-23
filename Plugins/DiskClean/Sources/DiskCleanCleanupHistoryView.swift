@@ -527,7 +527,7 @@ private struct DiskCleanRunHistoryRow: View {
 
                 if !run.itemEntries.isEmpty {
                     Button {
-                        withAnimation(.easeInOut(duration: 0.18)) {
+                        withAnimation(.easeOut(duration: 0.18)) {
                             isExpanded.toggle()
                         }
                     } label: {

@@ -169,7 +169,7 @@ struct StorageExplorerHierarchyTreemapView: View {
                 guard !previousRectangles.isEmpty, !reduceMotion else { return }
                 await Task.yield()
                 guard !Task.isCancelled else { return }
-                withAnimation(.easeInOut(duration: 0.16)) {
+                withAnimation(reduceMotion ? nil : .easeOut(duration: 0.16)) {
                     showCurrentLayout = true
                 }
                 try? await Task.sleep(for: .milliseconds(190))

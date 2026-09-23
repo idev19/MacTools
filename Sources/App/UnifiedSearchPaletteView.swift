@@ -915,9 +915,8 @@ struct UnifiedSearchPaletteView: View {
                     return
                 }
 
-                withAnimation(.easeOut(duration: 0.12)) {
-                    proxy.scrollTo(resultID, anchor: .center)
-                }
+                // Keyboard navigation repeats constantly; the selection must land instantly.
+                proxy.scrollTo(resultID, anchor: .center)
             }
         }
     }

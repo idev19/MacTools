@@ -583,6 +583,7 @@ private func permissionActionTitle(for item: PermissionCenterItem) -> String {
 
 struct GeneralSettingsView: View {
     let pluginHost: PluginHost
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @ObservedObject var navigationCoordinator: SettingsNavigationCoordinator
     @ObservedObject var menuBarIconSettings: MenuBarIconSettings
     @ObservedObject var menuBarIconGallery: MenuBarIconGalleryLibrary
@@ -775,7 +776,7 @@ struct GeneralSettingsView: View {
         activeSearchTarget = target
 
         DispatchQueue.main.async {
-            withAnimation(.easeOut(duration: 0.2)) {
+            withAnimation(PluginMotion.animation(.scroll, reduceMotion: reduceMotion)) {
                 proxy.scrollTo(target.scrollID, anchor: .center)
             }
         }
@@ -2845,6 +2846,8 @@ private extension EnvironmentValues {
 }
 
 private struct SettingsSidebarShortcutLabel: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     enum Style {
         case plain
         case badge
@@ -2874,7 +2877,7 @@ private struct SettingsSidebarShortcutLabel: View {
             alignment: .trailing
         )
         .opacity(isVisible ? 1 : 0)
-        .animation(.easeOut(duration: 0.12), value: isVisible)
+        .animation(PluginMotion.animation(.hover, reduceMotion: reduceMotion), value: isVisible)
         .accessibilityHidden(true)
     }
 
@@ -2896,6 +2899,8 @@ private struct SettingsSidebarShortcutLabel: View {
 }
 
 private struct SettingsSidebar: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     private enum Layout {
         static let searchSectionSpacing = PluginSettingsTheme.Spacing.sectionHeaderContent
     }
@@ -3268,7 +3273,7 @@ private struct SettingsSidebar: View {
             containsSelection: containsSelection
         )
         return Button {
-            withAnimation(.easeInOut(duration: 0.15)) {
+            withAnimation(PluginMotion.animation(.reveal, reduceMotion: reduceMotion)) {
                 sidebarPreferences.setSection(section, expanded: !isExpanded)
             }
             highlightedCollapsedSection = nil
@@ -3435,7 +3440,7 @@ private struct SettingsSidebar: View {
         using proxy: ScrollViewProxy
     ) {
         let sidebarDestination = destination.sidebarDestination
-        withAnimation(.easeInOut(duration: 0.15)) {
+        withAnimation(PluginMotion.animation(.reveal, reduceMotion: reduceMotion)) {
             switch destination {
             case .general, .permissions, .about:
                 sidebarPreferences.setSection(.app, expanded: true)
@@ -3447,7 +3452,7 @@ private struct SettingsSidebar: View {
         }
 
         DispatchQueue.main.async {
-            withAnimation {
+            withAnimation(PluginMotion.animation(.scroll, reduceMotion: reduceMotion)) {
                 proxy.scrollTo(sidebarDestination)
             }
         }
@@ -3799,6 +3804,7 @@ struct PluginSettingsPageVisibilityTransition {
 }
 
 private struct PluginSettingsDetailPane: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @ObservedObject var pluginHost: PluginHost
     @ObservedObject var navigationCoordinator: SettingsNavigationCoordinator
     let pluginID: String
@@ -3905,7 +3911,7 @@ private struct PluginSettingsDetailPane: View {
         }
 
         DispatchQueue.main.async {
-            withAnimation(.easeOut(duration: 0.2)) {
+            withAnimation(PluginMotion.animation(.scroll, reduceMotion: reduceMotion)) {
                 proxy.scrollTo(target.scrollID, anchor: .center)
             }
         }
@@ -4107,12 +4113,8 @@ private struct SettingsFullWidthDisclosure<Label: View, Content: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: PluginSettingsTheme.Spacing.sectionHeaderContent) {
             Button {
-                if accessibilityReduceMotion {
+                withAnimation(PluginMotion.animation(.reveal, reduceMotion: accessibilityReduceMotion)) {
                     isExpanded.toggle()
-                } else {
-                    withAnimation(.easeInOut(duration: 0.16)) {
-                        isExpanded.toggle()
-                    }
                 }
             } label: {
                 HStack(spacing: PluginSettingsTheme.Spacing.rowContentControl) {
@@ -4136,9 +4138,7 @@ private struct SettingsFullWidthDisclosure<Label: View, Content: View>: View {
 
             if isExpanded {
                 content
-                    .transition(accessibilityReduceMotion
-                        ? .identity
-                        : .opacity.combined(with: .move(edge: .top)))
+                    .transition(PluginMotion.revealTransition(edge: .top, reduceMotion: accessibilityReduceMotion))
             }
         }
     }

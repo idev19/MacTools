@@ -1623,6 +1623,7 @@ struct MenuBarPanelEditingButtonStyle: ButtonStyle {
 
     let emphasis: Emphasis
     let isHovered: Bool
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.controlSize) private var controlSize
     @Environment(\.colorSchemeContrast) private var colorSchemeContrast
     @Environment(\.isEnabled) private var isEnabled
@@ -1653,8 +1654,8 @@ struct MenuBarPanelEditingButtonStyle: ButtonStyle {
             .contentShape(
                 RoundedRectangle(cornerRadius: MenuBarPanelLayout.cornerRadius, style: .continuous)
             )
-            .scaleEffect(configuration.isPressed && isEnabled ? 0.98 : 1)
-            .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
+            .scaleEffect(configuration.isPressed && isEnabled && !reduceMotion ? 0.97 : 1)
+            .animation(PluginMotion.animation(.press, reduceMotion: reduceMotion), value: configuration.isPressed)
     }
 
     private func foregroundColor(role: ButtonRole?) -> Color {

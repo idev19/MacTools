@@ -111,7 +111,7 @@ private struct DiskCleanCategoryCard: View {
             .disabled(!isInteractionEnabled || !state.isSelectable)
 
             Button {
-                withAnimation(.easeInOut(duration: 0.18)) {
+                withAnimation(.easeOut(duration: 0.18)) {
                     onToggleExpanded()
                 }
             } label: {

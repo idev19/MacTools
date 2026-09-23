@@ -138,7 +138,7 @@ struct HomebrewDetailView: View {
                         if !controller.logs.isEmpty {
                             consoleDrawer
                                 .frame(height: 140)
-                                .transition(.move(edge: .bottom))
+                                .transition(.opacity.combined(with: .move(edge: .bottom)))
                         }
                     }
                 }

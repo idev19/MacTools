@@ -580,6 +580,8 @@ final class HoverSecondaryPanelCoordinator: ObservableObject {
 }
 
 struct MenuBarContent: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     static let diskCleanWindowID = "disk-clean"
     static let diskCleanOpenDetailsActionID = "disk-clean-open-details"
     static let launchControlWindowID = "launch-control"
@@ -634,7 +636,7 @@ struct MenuBarContent: View {
                 hoverCoordinator.dismissImmediately()
             }
         }
-        .animation(.easeOut(duration: 0.18), value: activeSecondaryPanelSignature)
+        .animation(PluginMotion.animation(.reveal, reduceMotion: reduceMotion), value: activeSecondaryPanelSignature)
         .onChange(of: secondaryPanelController.isPresentingInline) { _, inline in
             onInlinePresentationChange(inline)
         }
@@ -1634,7 +1636,7 @@ struct FeatureRowView: View {
     }
 
     private var copyFeedbackAnimation: Animation? {
-        accessibilityReduceMotion ? nil : .easeOut(duration: 0.12)
+        PluginMotion.animation(.press, reduceMotion: accessibilityReduceMotion)
     }
 
     private func copyDescription() {
