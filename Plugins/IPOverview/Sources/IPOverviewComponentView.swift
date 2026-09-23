@@ -2,6 +2,7 @@ import SwiftUI
 import MacToolsPluginKit
 
 struct IPOverviewComponentView: View {
+    @Environment(\.pluginComponentTheme) private var theme
     private enum Layout {
         static let leakCardMinimumWidth: CGFloat = 240
         static let leakCardMaximumWidth: CGFloat = 360
@@ -667,13 +668,13 @@ struct IPOverviewComponentView: View {
         case .waiting:
             return .secondary
         case .checking:
-            return Color(nsColor: .systemBlue)
+            return theme.status.informational
         case .clear:
-            return Color(nsColor: .systemGreen)
+            return theme.status.success
         case .warning:
-            return Color(nsColor: .systemRed)
+            return theme.status.critical
         case .unknown:
-            return Color(nsColor: .systemOrange)
+            return theme.status.warning
         }
     }
 
@@ -797,11 +798,11 @@ struct IPOverviewComponentView: View {
         case .waiting:
             return .secondary.opacity(0.45)
         case .checking:
-            return Color(nsColor: .systemBlue)
+            return theme.status.informational
         case .reachable(let milliseconds):
-            return milliseconds < 250 ? Color(nsColor: .systemGreen) : Color(nsColor: .systemOrange)
+            return milliseconds < 250 ? theme.status.success : theme.status.warning
         case .unreachable:
-            return Color(nsColor: .systemRed)
+            return theme.status.critical
         }
     }
 
@@ -822,10 +823,8 @@ struct IPOverviewComponentView: View {
         switch status {
         case .waiting:
             return .secondary.opacity(0.45)
-        case .checking:
-            return Color(nsColor: .systemBlue)
-        case .success:
-            return Color(nsColor: .systemBlue)
+        case .checking, .success:
+            return theme.status.informational
         case .failure:
             return .secondary.opacity(0.65)
         }

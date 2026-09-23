@@ -829,6 +829,7 @@ struct SystemStatusComponentView: View {
     @ObservedObject var settingsController: SystemStatusSettingsController
     let localization: PluginLocalization
     let onMetricDetail: (SystemStatusMetricKind) -> Void
+    @Environment(\.pluginComponentTheme) private var theme
 
     var body: some View {
         PluginObservedContent(viewModel) { _ in
@@ -943,12 +944,12 @@ struct SystemStatusComponentView: View {
                     SystemStatusNetworkSpeedRow(
                         iconName: "arrow.down",
                         value: SystemStatusFormatter.speed(network.downloadBytesPerSecond),
-                        tint: Color(nsColor: .systemBlue)
+                        tint: theme.dataSeries.primary
                     )
                     SystemStatusNetworkSpeedRow(
                         iconName: "arrow.up",
                         value: SystemStatusFormatter.speed(network.uploadBytesPerSecond),
-                        tint: Color(nsColor: .systemGreen)
+                        tint: theme.dataSeries.secondary
                     )
                 }
 
@@ -1016,10 +1017,6 @@ struct SystemStatusComponentView: View {
     }
 }
 
-private enum SystemStatusCircleStyle {
-    static let tint = Color(nsColor: .systemBlue)
-}
-
 private struct SystemStatusCompactMetricCard: View {
     let title: String
     let percentText: String
@@ -1027,11 +1024,12 @@ private struct SystemStatusCompactMetricCard: View {
     let progress: Double?
     var centerSubtext: String? = nil
     var centerHelpText: String? = nil
+    @Environment(\.pluginComponentTheme) private var theme
 
     var body: some View {
         VStack(spacing: 0) {
             ZStack {
-                SystemStatusCircularProgress(value: progress, tint: SystemStatusCircleStyle.tint)
+                SystemStatusCircularProgress(value: progress, tint: theme.dataSeries.primary)
                     .frame(width: 58, height: 58)
 
                 VStack(spacing: centerSubtext == nil ? 1 : 0) {
@@ -1051,7 +1049,7 @@ private struct SystemStatusCompactMetricCard: View {
                     if let centerSubtext {
                         Text(centerSubtext)
                             .font(.system(size: 6.8, weight: .semibold, design: .rounded))
-                            .foregroundStyle(SystemStatusCircleStyle.tint)
+                            .foregroundStyle(theme.dataSeries.primary)
                             .lineLimit(1)
                             .minimumScaleFactor(0.55)
                     }

@@ -69,6 +69,17 @@ Use semantic fonts, SF Symbols, native bordered buttons, small control sizes, an
 
 Respect the user's layout, appearance, accessibility, and system preferences. Check the themes, keyboard/focus behavior, labels, and loading/error/empty states affected by the change. Visual-only changes normally use screenshots and manual verification; state transitions and actions need focused behavior coverage only where existing tests leave a gap. Keep copy brief and user-facing.
 
+### Data colors
+
+`PluginComponentTheme.dataSeries` is the only source of chart colors. Every color does one job:
+
+- **Categorical (identity):** `slots` hold eight hues in a fixed order (`primary` … `octonary`). Assign them in sequence with `color(at:)`, never skip or cycle; the ninth series and beyond wear `other`. Color follows the entity: a filter that changes the series count must not repaint the survivors.
+- **Sequential (magnitude):** `sequential` is one hue from near zero to the maximum, stepped for the appearance; `sequentialColor(at:)` snaps a 0…1 value to a step. Never a rainbow.
+- **Diverging (polarity):** `divergingNegative` / `divergingMidpoint` / `divergingPositive`; the midpoint is neutral and reads as "nothing".
+- **Status (state):** `theme.status` is reserved for good / warning / critical / informational, ships with an icon or label, and is never reused as "series 4". When a series *means* good or bad it wears status tokens; otherwise it wears a slot, never both in one chart.
+
+The system palette was validated against light and dark window surfaces (lightness band, chroma floor, adjacent-pair color-vision-deficiency separation, normal-vision floor, contrast). Two light-mode slots sit just under 3:1, so series always carry a legend or direct labels; text, values, and legends wear text tokens rather than the series color. Custom Base16 themes derive the same order (blue, orange, cyan, yellow, purple, green, red, brown) from their palette and cannot be validated ahead of time. Keep marks thin (1.5–2 pt lines, 4 pt rounded bar ends), gridlines recessive, and at most three series in forms where any two marks can touch (scatter, treemap, small multiples). Plugin packages that must run on hosts without the eight-slot API keep using the first six slots and `theme.status`.
+
 ### Motion
 
 `PluginMotion` (MacToolsPluginKit) is the shared motion vocabulary for host surfaces and PluginKit components. Decide in this order before animating:

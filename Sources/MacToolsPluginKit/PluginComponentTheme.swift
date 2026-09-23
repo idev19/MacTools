@@ -79,6 +79,9 @@ public struct PluginComponentTheme: Sendable {
         }
     }
 
+    /// Categorical series colors in a fixed order, plus the magnitude and
+    /// polarity ramps charts need. Slots are assigned in sequence and never
+    /// cycled; a ninth series folds into `other`.
     public struct DataSeriesPalette: Sendable {
         public let primary: Color
         public let secondary: Color
@@ -86,7 +89,48 @@ public struct PluginComponentTheme: Sendable {
         public let quaternary: Color
         public let quinary: Color
         public let senary: Color
+        public let septenary: Color
+        public let octonary: Color
+        /// Everything past the eighth series, so extra series never repaint the palette.
+        public let other: Color
+        /// One-hue magnitude ramp from near zero to the maximum, stepped for the current appearance.
+        public let sequential: [Color]
+        public let divergingNegative: Color
+        /// A neutral that reads as "nothing" between the two diverging poles.
+        public let divergingMidpoint: Color
+        public let divergingPositive: Color
 
+        public init(
+            primary: Color,
+            secondary: Color,
+            tertiary: Color,
+            quaternary: Color,
+            quinary: Color,
+            senary: Color,
+            septenary: Color,
+            octonary: Color,
+            other: Color,
+            sequential: [Color],
+            divergingNegative: Color,
+            divergingMidpoint: Color,
+            divergingPositive: Color
+        ) {
+            self.primary = primary
+            self.secondary = secondary
+            self.tertiary = tertiary
+            self.quaternary = quaternary
+            self.quinary = quinary
+            self.senary = senary
+            self.septenary = septenary
+            self.octonary = octonary
+            self.other = other
+            self.sequential = sequential.isEmpty ? [primary] : sequential
+            self.divergingNegative = divergingNegative
+            self.divergingMidpoint = divergingMidpoint
+            self.divergingPositive = divergingPositive
+        }
+
+        /// Six-slot palettes keep working; the remaining roles derive from the given slots.
         public init(
             primary: Color,
             secondary: Color,
@@ -95,12 +139,71 @@ public struct PluginComponentTheme: Sendable {
             quinary: Color,
             senary: Color
         ) {
-            self.primary = primary
-            self.secondary = secondary
-            self.tertiary = tertiary
-            self.quaternary = quaternary
-            self.quinary = quinary
-            self.senary = senary
+            self.init(
+                primary: primary,
+                secondary: secondary,
+                tertiary: tertiary,
+                quaternary: quaternary,
+                quinary: quinary,
+                senary: senary,
+                septenary: quaternary.opacity(0.72),
+                octonary: secondary.opacity(0.72),
+                other: Color(nsColor: .tertiaryLabelColor),
+                sequential: (2...10).map { primary.opacity(Double($0) / 10) },
+                divergingNegative: senary,
+                divergingMidpoint: Color(nsColor: .quaternaryLabelColor),
+                divergingPositive: primary
+            )
+        }
+
+        /// The eight categorical slots in assignment order.
+        public var slots: [Color] {
+            [primary, secondary, tertiary, quaternary, quinary, senary, septenary, octonary]
+        }
+
+        /// Fixed-order assignment: the ninth series and beyond wear `other` instead of a recycled hue.
+        public func color(at index: Int) -> Color {
+            let ordered = slots
+            guard ordered.indices.contains(index) else { return other }
+            return ordered[index]
+        }
+
+        /// The ramp step nearest a 0...1 magnitude.
+        public func sequentialColor(at fraction: Double) -> Color {
+            guard fraction.isFinite, fraction > 0 else { return sequential[0] }
+            guard fraction < 1 else { return sequential[sequential.count - 1] }
+            return sequential[Int((fraction * Double(sequential.count - 1)).rounded())]
+        }
+
+        /// The system palette, validated against light and dark window surfaces: every
+        /// adjacent pair clears the color-vision-deficiency and normal-vision separation
+        /// floors, and each step sits in the lightness band for its appearance. Aqua and
+        /// yellow sit just under 3:1 on light surfaces, which is why series always carry a
+        /// legend or direct label. Status colors stay separate so a state never looks
+        /// like a series.
+        public static func system(colorScheme: ColorScheme) -> DataSeriesPalette {
+            let dark = colorScheme == .dark
+            let blueRamp: [UInt32] = [
+                0xCDE2FB, 0xB7D3F6, 0x9EC5F4, 0x86B6EF, 0x6DA7EC, 0x5598E7, 0x3987E5,
+                0x2A78D6, 0x256ABF, 0x1C5CAB, 0x184F95, 0x104281, 0x0D366B,
+            ]
+            // Near zero recedes toward the surface, so the dark ramp climbs toward the light steps.
+            let ramp = dark ? Array(blueRamp.dropLast().reversed()) : blueRamp
+            return DataSeriesPalette(
+                primary: Color(rgb: dark ? 0x3987E5 : 0x2A78D6),
+                secondary: Color(rgb: 0xD95926),
+                tertiary: Color(rgb: 0x199E70),
+                quaternary: Color(rgb: 0xC98500),
+                quinary: Color(rgb: 0xD55181),
+                senary: Color(rgb: 0x008300),
+                septenary: Color(rgb: dark ? 0x9085E9 : 0x4A3AA7),
+                octonary: Color(rgb: dark ? 0xE66767 : 0xE34948),
+                other: Color(rgb: 0x898781),
+                sequential: ramp.map { Color(rgb: $0) },
+                divergingNegative: Color(rgb: dark ? 0xE66767 : 0xE34948),
+                divergingMidpoint: Color(rgb: dark ? 0x3A3A3A : 0xDCDCDC),
+                divergingPositive: Color(rgb: dark ? 0x3987E5 : 0x2A78D6)
+            )
         }
     }
 
@@ -353,14 +456,7 @@ public struct PluginComponentTheme: Sendable {
                 critical: Color(nsColor: .systemRed),
                 informational: Color(nsColor: .systemBlue)
             ),
-            dataSeries: DataSeriesPalette(
-                primary: Color(nsColor: .systemBlue),
-                secondary: Color(nsColor: .systemOrange),
-                tertiary: Color(nsColor: .systemGreen),
-                quaternary: Color(nsColor: .systemPurple),
-                quinary: Color(nsColor: .systemTeal),
-                senary: Color(nsColor: .systemYellow)
-            ),
+            dataSeries: DataSeriesPalette.system(colorScheme: colorScheme),
             interaction: InteractionPalette(
                 selectionOpacity: resolveInteractionOpacity(
                     colorScheme: colorScheme,
@@ -410,6 +506,16 @@ public struct PluginComponentTheme: Sendable {
         @unknown default:
             colorScheme == .dark ? dark : light
         }
+    }
+}
+
+private extension Color {
+    init(rgb: UInt32) {
+        self.init(
+            red: Double((rgb >> 16) & 0xFF) / 255,
+            green: Double((rgb >> 8) & 0xFF) / 255,
+            blue: Double(rgb & 0xFF) / 255
+        )
     }
 }
 

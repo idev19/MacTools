@@ -234,20 +234,36 @@ enum MenuBarPanelThemeResolver {
             darkEndpoint: base07,
             lightEndpoint: base00
         )
-        let quaternary = functionalColor(
+        let purple = functionalColor(
             required("base0E"),
             contrastTarget: functionalContrastTarget,
             backgrounds: [base00, card],
             darkEndpoint: base07,
             lightEndpoint: base00
         )
-        let senary = functionalColor(
+        let yellow = functionalColor(
             required("base0A"),
             contrastTarget: functionalContrastTarget,
             backgrounds: [base00, card],
             darkEndpoint: base07,
             lightEndpoint: base00
         )
+        let brown = functionalColor(
+            required("base0F"),
+            contrastTarget: functionalContrastTarget,
+            backgrounds: [base00, card],
+            darkEndpoint: base07,
+            lightEndpoint: base00
+        )
+        // Magnitude recedes toward the panel surface near zero and deepens past the accent at the top.
+        let deepEndpoint: MenuBarPanelThemeColor = definition.appearance == .dark ? base07 : .black
+        let rising: [MenuBarPanelThemeColor] = (0..<8).map { step in
+            base00.mixed(with: accent, amount: 0.16 + Double(step) * 0.12)
+        }
+        let deepening: [MenuBarPanelThemeColor] = (1...3).map { step in
+            accent.mixed(with: deepEndpoint, amount: Double(step) * 0.14)
+        }
+        let sequential = rising + deepening
         let tabSelection = accessibleSurface(
             card.mixed(with: accent, amount: increased ? 0.30 : 0.22),
             from: card,
@@ -290,13 +306,23 @@ enum MenuBarPanelThemeResolver {
                 critical: critical.swiftUIColor,
                 informational: informational.swiftUIColor
             ),
+            // The same fixed hue order as the system palette: blue, orange, cyan,
+            // yellow, purple, green, red, brown. Status colors reuse theme hues,
+            // so a chart that means good/bad wears status tokens, not series slots.
             dataSeries: PluginComponentTheme.DataSeriesPalette(
                 primary: accent.swiftUIColor,
                 secondary: warning.swiftUIColor,
-                tertiary: success.swiftUIColor,
-                quaternary: quaternary.swiftUIColor,
-                quinary: informational.swiftUIColor,
-                senary: senary.swiftUIColor
+                tertiary: informational.swiftUIColor,
+                quaternary: yellow.swiftUIColor,
+                quinary: purple.swiftUIColor,
+                senary: success.swiftUIColor,
+                septenary: critical.swiftUIColor,
+                octonary: brown.swiftUIColor,
+                other: tertiary.swiftUIColor,
+                sequential: sequential.map(\.swiftUIColor),
+                divergingNegative: critical.swiftUIColor,
+                divergingMidpoint: separator.swiftUIColor,
+                divergingPositive: accent.swiftUIColor
             ),
             interaction: PluginComponentTheme.InteractionPalette(
                 selectionOpacity: selectionOpacity,
