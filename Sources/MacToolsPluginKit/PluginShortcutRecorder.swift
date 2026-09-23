@@ -139,7 +139,7 @@ private struct PluginShortcutRecorderFieldContent: View {
 
     private var textFont: Font {
         isCompact
-            ? .system(size: 11, design: .monospaced)
+            ? PluginSettingsTheme.Typography.compactMonospacedValue
             : PluginSettingsTheme.Typography.monospacedValue
     }
 

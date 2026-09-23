@@ -262,7 +262,7 @@ private struct PanelLayoutInsertionMarker: View {
                 .fill(theme.accent.opacity(target.isVacancy ? 0.12 : 1))
                 .overlay {
                     if target.isVacancy {
-                        RoundedRectangle(cornerRadius: 8).strokeBorder(theme.accent, lineWidth: 2)
+                        RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.control, style: .continuous).strokeBorder(theme.accent, lineWidth: 2)
                     }
                 }
                 .frame(width: marker.width, height: marker.height)
@@ -385,7 +385,7 @@ private struct PanelLayoutReorderItem<Content: View>: View {
                 .accessibilityHidden(true)
         }
         .overlay {
-            RoundedRectangle(cornerRadius: 10)
+            RoundedRectangle(cornerRadius: PluginPanelWidgetLayoutMetrics.cardCornerRadius, style: .continuous)
                 .strokeBorder(isDragging || (showsControls && focusedControl != nil) ? theme.accent : .clear, lineWidth: 2)
                 .allowsHitTesting(false)
                 .accessibilityHidden(true)

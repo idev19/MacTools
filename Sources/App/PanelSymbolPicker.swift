@@ -212,7 +212,7 @@ struct PanelSymbolPicker: View {
                                 .foregroundStyle(selected == symbol ? Color.accentColor : .primary)
                                 .frame(width: 38, height: 36)
                                 .background {
-                                    RoundedRectangle(cornerRadius: 7)
+                                    RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.control, style: .continuous)
                                         .fill(
                                             selected == symbol
                                                 ? Color.accentColor.opacity(0.15) : Color.primary.opacity(0.04))

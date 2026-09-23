@@ -1162,7 +1162,7 @@ private struct ActionGridTileLabel: View {
                         .tint(.accentColor)
                 } else {
                     Image(systemName: PluginSystemImage.resolvedName(entry.systemImage))
-                        .font(.system(size: 27, weight: .medium))
+                        .font(PluginPanelTheme.Symbol.hero)
                         .foregroundStyle(iconColor)
                 }
             }
@@ -1320,7 +1320,7 @@ private struct ActionGridOverlayView: View {
         }
         .padding(ActionGridOverlayGeometry.contentPadding)
         .background {
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
+            RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.overlay, style: .continuous)
                 .fill(
                     accessibilityPolicy.usesMaterialBackground
                         ? AnyShapeStyle(.regularMaterial)
@@ -1328,7 +1328,7 @@ private struct ActionGridOverlayView: View {
                 )
         }
         .overlay {
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
+            RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.overlay, style: .continuous)
                 .strokeBorder(
                     Color(nsColor: .separatorColor).opacity(
                         colorSchemeContrast == .increased ? 0.80 : 0.45
@@ -1349,7 +1349,7 @@ private struct ActionGridOverlayView: View {
     private var emptyFolderView: some View {
         VStack(spacing: 8) {
             Image(systemName: "folder")
-                .font(.system(size: 26, weight: .medium))
+                .font(PluginPanelTheme.Symbol.hero)
                 .foregroundStyle(.secondary)
 
             Text(FeatureL10n.string("此文件夹为空"))
@@ -1370,7 +1370,7 @@ private struct ActionGridOverlayView: View {
     }
 
     private func tileBackground(selected: Bool, hovered: Bool) -> some View {
-        let shape = RoundedRectangle(cornerRadius: 12, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.hostCard, style: .continuous)
         return shape
             .fill(selected
                 ? Color.accentColor.opacity(0.08)

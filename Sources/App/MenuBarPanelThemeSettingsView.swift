@@ -54,7 +54,7 @@ struct MenuBarPanelThemeSettingsRow: View {
                 presentPicker(for: preferredPickerAppearance)
             } label: {
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 10, weight: .semibold))
+                    .font(PluginPanelTheme.Symbol.chevron)
                     .foregroundStyle(.tertiary)
                     .frame(width: 16, height: 24)
                     .contentShape(Rectangle())
@@ -296,7 +296,7 @@ private struct MenuBarPanelThemePickerSheet: View {
                 dismiss()
             } label: {
                 Image(systemName: "xmark.circle.fill")
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(PluginSettingsTheme.Typography.cardSymbol.weight(.semibold))
                     .symbolRenderingMode(.hierarchical)
                     .foregroundStyle(.secondary)
                     .frame(width: headerControlHeight, height: headerControlHeight)
@@ -377,12 +377,12 @@ private struct MenuBarPanelThemePickerSheet: View {
                                 "panelTheme.systemDefault",
                                 defaultValue: "系统默认"
                             ))
-                            .font(.system(size: 12, weight: .semibold))
+                            .font(PluginSettingsTheme.Typography.cardTitle)
                             .foregroundStyle(.primary)
                             .lineLimit(1)
 
                             Text(themeSubtitle(definition))
-                                .font(.system(size: 9.5))
+                                .font(PluginSettingsTheme.Typography.cardSubtitle)
                                 .foregroundStyle(.secondary)
                                 .lineLimit(1)
                         }
@@ -421,9 +421,9 @@ private struct MenuBarPanelThemePickerSheet: View {
         }
         .padding(10)
         .background(Color.primary.opacity(isSelected ? 0.08 : 0.035))
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.hostCard, style: .continuous))
         .overlay {
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
+            RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.hostCard, style: .continuous)
                 .stroke(
                     isSelected ? Color.accentColor.opacity(0.8) : Color.primary.opacity(0.06),
                     lineWidth: isSelected ? 1.5 : 0.5
@@ -517,7 +517,7 @@ private struct MenuBarPanelThemePreview: View {
         .padding(8)
         .frame(height: 92)
         .background(style.surfaces.panel)
-        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.card, style: .continuous))
         .environment(\.colorScheme, colorScheme)
         .accessibilityHidden(true)
     }

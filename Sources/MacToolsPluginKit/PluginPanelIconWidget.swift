@@ -54,8 +54,7 @@ struct PluginPanelIconWidget: View {
     enum Layout {
         static let height = PluginPanelWidgetLayoutMetrics.default.compactCellSize.height
         static let iconSize: CGFloat = 42
-        static let symbolSize: CGFloat = 20
-        static let buttonCornerRadius: CGFloat = 13
+        static let buttonCornerRadius = PluginSettingsTheme.Radius.hostCard
         static let titleSpacing: CGFloat = 4
         static let titleHeight: CGFloat = 14
     }
@@ -97,7 +96,7 @@ struct PluginPanelIconWidget: View {
             VStack(spacing: Layout.titleSpacing) {
                 icon
                 Text(title)
-                    .font(.system(size: 10, weight: .medium))
+                    .font(PluginPanelTheme.Typography.widgetTitle)
                     .foregroundStyle(theme.text.primary)
                     .lineLimit(1)
                     .truncationMode(.tail)
@@ -116,7 +115,7 @@ struct PluginPanelIconWidget: View {
         .overlay(alignment: .topTrailing) {
             if state.errorMessage != nil {
                 Image(systemName: "exclamationmark.circle.fill")
-                    .font(.system(size: 11, weight: .semibold))
+                    .font(PluginPanelTheme.Symbol.caption)
                     .foregroundStyle(theme.status.warning)
                     .padding(4)
                     .allowsHitTesting(false)
@@ -147,7 +146,7 @@ struct PluginPanelIconWidget: View {
                 isEnabled && isHovered ? theme.surfaces.controlHover : theme.surfaces.control
             ))
             Image(systemName: PluginSystemImage.resolvedName(systemImage))
-                .font(.system(size: Layout.symbolSize, weight: .medium))
+                .font(PluginPanelTheme.Symbol.widget)
                 .symbolRenderingMode(.monochrome)
                 // The host resolves its accent against this panel color, so the
                 // inverse icon stays legible in light, dark, and imported themes.

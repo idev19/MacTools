@@ -69,6 +69,16 @@ Use semantic fonts, SF Symbols, native bordered buttons, small control sizes, an
 
 Respect the user's layout, appearance, accessibility, and system preferences. Check the themes, keyboard/focus behavior, labels, and loading/error/empty states affected by the change. Visual-only changes normally use screenshots and manual verification; state transitions and actions need focused behavior coverage only where existing tests leave a gap. Keep copy brief and user-facing.
 
+### Type and corners
+
+Two scales cover every surface, so no view restates a point size or a radius:
+
+- **Settings and floating cards** use the semantic `PluginSettingsTheme.Typography` tokens (`pageTitle`, `rowTitle`, `rowDescription`, `cardTitle`, `cardSubtitle`, `statusBadge`, `monospacedValue`) and its symbol sizes (`heroSymbol`, `pageSymbol`, `cardSymbol`, `rowIcon`). They map to Apple text styles, so they follow the user's text size.
+- **The menu bar panel and widgets** use `PluginPanelTheme.Typography` and `PluginPanelTheme.Symbol`, a fixed compact scale (13 / 12 / 11.5 / 11 / 10.5 / 10 / 8.5) that keeps menu-like rows stable. Hierarchy is weight and size as a set: one semibold row title, a medium description one step below, semibold badges. Symbols share the same steps so an icon never outweighs its label.
+- **Radii** come from `PluginSettingsTheme.Radius`: `chip` 4, `field` 6, `control` 8, `card` 10, `hostCard` 12 (also the panel and widget cards), `overlay` 16 (palettes, the action grid, run-link feedback). A shape inset inside a rounded parent uses `nested(_:inset:)` so the corners stay concentric; app-icon clips use `appIcon(for:)`. Prefer `.continuous` corners.
+
+Miniature previews (theme thumbnails) are drawings, not controls, and keep their own reduced sizes.
+
 ### Data colors
 
 `PluginComponentTheme.dataSeries` is the only source of chart colors. Every color does one job:

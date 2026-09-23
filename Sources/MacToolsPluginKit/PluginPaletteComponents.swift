@@ -2,16 +2,16 @@ import AppKit
 import SwiftUI
 
 public enum PluginPaletteMetrics {
-    public static let surfaceCornerRadius: CGFloat = 14
+    public static let surfaceCornerRadius: CGFloat = PluginSettingsTheme.Radius.overlay
     public static let contentPadding: CGFloat = 16
     public static let contentSpacing: CGFloat = 12
-    public static let searchCornerRadius: CGFloat = 9
+    public static let searchCornerRadius: CGFloat = PluginSettingsTheme.Radius.card
     public static let searchHorizontalPadding: CGFloat = 12
     public static let searchVerticalPadding: CGFloat = 9
     public static let searchContentSpacing: CGFloat = 8
     public static let searchToolbarSpacing: CGFloat = 8
     public static let toolbarControlSize = CGSize(width: 36, height: 36)
-    public static let rowCornerRadius: CGFloat = 8
+    public static let rowCornerRadius: CGFloat = PluginSettingsTheme.Radius.control
     public static let rowHorizontalPadding: CGFloat = 10
     public static let rowVerticalPadding: CGFloat = 9
     public static let rowIconWidth: CGFloat = 18
@@ -685,16 +685,16 @@ private struct PluginPaletteToolbarControlStyleBody: View {
             .opacity(isEnabled ? 1 : 0.5)
             .background(
                 background,
-                in: RoundedRectangle(cornerRadius: 7, style: .continuous)
+                in: RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.control, style: .continuous)
             )
             .overlay {
                 if contrast == .increased {
-                    RoundedRectangle(cornerRadius: 7, style: .continuous)
+                    RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.control, style: .continuous)
                         .strokeBorder(Color.primary.opacity(isEnabled ? 0.7 : 0.3), lineWidth: 1)
                         .allowsHitTesting(false)
                 }
             }
-            .contentShape(RoundedRectangle(cornerRadius: 7, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.control, style: .continuous))
             // Press feedback lands on the press itself, not on release.
             .scaleEffect(configuration.isPressed && isEnabled && !reduceMotion ? 0.97 : 1)
             .onHover { isHovered = $0 }
@@ -730,16 +730,16 @@ public struct PluginPaletteKeyboardHint: View {
     public var body: some View {
         HStack(spacing: 4) {
             Text(key)
-                .font(.system(size: 10, weight: .semibold, design: .rounded))
+                .font(PluginPanelTheme.Typography.keycap)
                 .foregroundStyle(.primary)
                 .padding(.horizontal, 6)
                 .padding(.vertical, 3)
                 .background(
                     PluginSettingsTheme.Palette.fieldBackground,
-                    in: RoundedRectangle(cornerRadius: 5)
+                    in: RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.field, style: .continuous)
                 )
                 .overlay {
-                    RoundedRectangle(cornerRadius: 5)
+                    RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.field, style: .continuous)
                         .strokeBorder(
                             contrast == .increased ? Color.primary : PluginSettingsTheme.Palette.cardBorder,
                             lineWidth: 1

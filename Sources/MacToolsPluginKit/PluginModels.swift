@@ -348,7 +348,7 @@ public struct PluginPanelWidgetSpan: Equatable, Hashable, Sendable {
 }
 
 public struct PluginPanelWidgetLayoutMetrics: Equatable, Sendable {
-    public static let cardCornerRadius: CGFloat = 12
+    public static let cardCornerRadius: CGFloat = PluginSettingsTheme.Radius.hostCard
     public static let compactSpacing: CGFloat = 10
 
     public let columns: Int

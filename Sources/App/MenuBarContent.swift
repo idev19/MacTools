@@ -16,7 +16,7 @@ enum MenuBarPanelLayout {
     static let featureListMaximumHeight: CGFloat = 860
     static let featurePanelScreenHeightRatio: CGFloat = 0.75
     static let screenVerticalMargin: CGFloat = 48
-    static let cornerRadius: CGFloat = 12
+    static let cornerRadius: CGFloat = PluginSettingsTheme.Radius.hostCard
     static let panelSpacing: CGFloat = 10
     static let outerPadding: CGFloat = 6
     static let panelTopPadding: CGFloat = 4
@@ -348,7 +348,7 @@ enum SecondaryPanelPlacement: Equatable {
 
 private enum FeatureRowLayout {
     static let iconSize: CGFloat = 26
-    static let iconCornerRadius: CGFloat = 10
+    static let iconCornerRadius: CGFloat = PluginSettingsTheme.Radius.card
     static let rowSpacing: CGFloat = 10
     static let detailControlHorizontalPadding: CGFloat = 10
     static let detailLeadingInset: CGFloat = iconSize + rowSpacing - detailControlHorizontalPadding
@@ -368,7 +368,7 @@ private enum FeatureRowLayout {
 private enum MenuBarHoverStyle {
     static let cornerRadius: CGFloat = MenuBarPanelLayout.cornerRadius
     static let inset: CGFloat = 1
-    static let navigationCornerRadius: CGFloat = 8
+    static let navigationCornerRadius: CGFloat = PluginSettingsTheme.Radius.control
 }
 
 @MainActor
@@ -1317,7 +1317,7 @@ struct FeatureRowView: View {
                             .fill(theme.surfaces.control)
 
                         Image(systemName: PluginSystemImage.resolvedName(item.iconName))
-                            .font(.system(size: 12, weight: .semibold))
+                            .font(PluginPanelTheme.Symbol.control)
                             .foregroundStyle(item.isEnabled ? theme.text.secondary : theme.text.disabled)
                     }
                     .frame(width: FeatureRowLayout.iconSize, height: FeatureRowLayout.iconSize)
@@ -1421,7 +1421,7 @@ struct FeatureRowView: View {
                     .fill(theme.surfaces.control)
 
                 Image(systemName: PluginSystemImage.resolvedName(item.iconName))
-                    .font(.system(size: 12, weight: .semibold))
+                    .font(PluginPanelTheme.Symbol.control)
                     .foregroundStyle(item.isEnabled ? theme.text.secondary : theme.text.disabled)
             }
             .frame(width: FeatureRowLayout.iconSize, height: FeatureRowLayout.iconSize)
@@ -1439,12 +1439,12 @@ struct FeatureRowView: View {
                 )
             case .disclosure:
                 Image(systemName: item.isExpanded ? "chevron.down" : "chevron.right")
-                    .font(.system(size: 10, weight: .semibold))
+                    .font(PluginPanelTheme.Symbol.chevron)
                     .foregroundStyle(item.isEnabled ? theme.text.secondary : theme.text.disabled)
                     .frame(width: FeatureRowLayout.chevronSize, height: FeatureRowLayout.chevronSize)
             case .button:
                 Image(systemName: "arrow.up.right.square")
-                    .font(.system(size: 10, weight: .semibold))
+                    .font(PluginPanelTheme.Symbol.chevron)
                     .foregroundStyle(item.isEnabled ? theme.text.secondary : theme.text.disabled)
                     .frame(width: FeatureRowLayout.chevronSize, height: FeatureRowLayout.chevronSize)
             }
@@ -1494,7 +1494,7 @@ struct FeatureRowView: View {
         VStack(alignment: .leading, spacing: 2) {
             HStack(spacing: 5) {
                 Text(item.title)
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(PluginPanelTheme.Typography.rowTitle)
                     .foregroundStyle(item.isEnabled ? theme.text.primary : theme.text.disabled)
                     .lineLimit(1)
                     .layoutPriority(1)
@@ -1524,7 +1524,7 @@ struct FeatureRowView: View {
             }
             Text(indicator.text)
         }
-            .font(.system(size: 8.5, weight: .semibold))
+            .font(PluginPanelTheme.Typography.badge)
             .foregroundStyle(item.isEnabled ? theme.text.secondary : theme.text.disabled)
             .lineLimit(1)
             .padding(.horizontal, 5)
@@ -1552,7 +1552,7 @@ struct FeatureRowView: View {
                 .help(icon.accessibilityLabel)
             }
         }
-        .font(.system(size: 8.5, weight: .semibold))
+        .font(PluginPanelTheme.Typography.badge)
         .foregroundStyle(item.isEnabled ? theme.text.secondary : theme.text.disabled)
         .fixedSize(horizontal: true, vertical: false)
     }
@@ -1581,7 +1581,7 @@ struct FeatureRowView: View {
 
     private var descriptionText: some View {
         Text(item.description)
-            .font(.system(size: 10.5, weight: .medium))
+            .font(PluginPanelTheme.Typography.rowDescription)
             .foregroundStyle(
                 item.isEnabled
                     ? (item.descriptionTone == .error ? theme.status.critical : theme.text.secondary)
@@ -1752,7 +1752,7 @@ private struct IPOverviewInlineValueText: View {
 
     var body: some View {
         Text(value.text)
-            .font(.system(size: 9.5, weight: .medium, design: .monospaced))
+            .font(PluginPanelTheme.Typography.monospacedValue)
             .foregroundStyle(value.isEnabled ? theme.text.secondary : theme.text.disabled)
             .lineLimit(1)
             .minimumScaleFactor(0.72)
@@ -2057,7 +2057,7 @@ private struct DescriptiveSegmentedControl: View {
             } else {
                 if let title = control.sectionTitle {
                     Text(title)
-                        .font(.system(size: 10.5, weight: .medium))
+                        .font(PluginPanelTheme.Typography.rowDescription)
                         .foregroundStyle(control.isEnabled ? theme.text.secondary : theme.text.disabled)
                         .padding(.leading, 5)
                 }
@@ -2066,7 +2066,7 @@ private struct DescriptiveSegmentedControl: View {
             if let subtitle = control.options.first(where: { $0.id == control.selectedOptionID })?.subtitle,
                !subtitle.isEmpty {
                 Text(subtitle)
-                    .font(.system(size: 11))
+                    .font(PluginPanelTheme.Typography.caption)
                     .foregroundStyle(control.isEnabled ? theme.text.secondary : theme.text.disabled)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 5)
@@ -2155,13 +2155,13 @@ private struct SwitchRowControl: View {
         HStack(spacing: 8) {
             if let iconName = control.actionIconSystemName {
                 Image(systemName: PluginSystemImage.resolvedName(iconName))
-                    .font(.system(size: 12, weight: .medium))
+                    .font(PluginPanelTheme.Symbol.control.weight(.medium))
                     .foregroundStyle(control.isEnabled ? theme.text.secondary : theme.text.disabled)
                     .frame(width: 14, height: 14)
             }
 
             Text(control.actionTitle ?? control.sectionTitle ?? "")
-                .font(.system(size: 12, weight: .medium))
+                .font(PluginPanelTheme.Typography.controlLabel)
                 .foregroundStyle(control.isEnabled ? theme.text.primary : theme.text.disabled)
                 .lineLimit(1)
 
@@ -2204,7 +2204,7 @@ private struct ActionRowControl: View {
         VStack(alignment: .leading, spacing: 4) {
             if let sectionTitle = control.sectionTitle, !sectionTitle.isEmpty {
                 Text(sectionTitle)
-                    .font(.system(size: 10.5, weight: .medium))
+                    .font(PluginPanelTheme.Typography.rowDescription)
                     .foregroundStyle(control.isEnabled ? theme.text.secondary : theme.text.disabled)
                     .lineLimit(2)
                     .padding(.horizontal, FeatureRowLayout.detailControlHorizontalPadding)
@@ -2216,12 +2216,12 @@ private struct ActionRowControl: View {
             } label: {
                 HStack(spacing: 8) {
                     Image(systemName: control.actionIconSystemName ?? "arrow.up.right.square")
-                        .font(.system(size: 12, weight: .medium))
+                        .font(PluginPanelTheme.Symbol.control.weight(.medium))
                         .foregroundStyle(actionIconTint)
                         .frame(width: 14, height: 14)
 
                     Text(control.actionTitle ?? "")
-                        .font(.system(size: 12, weight: .medium))
+                        .font(PluginPanelTheme.Typography.controlLabel)
                         .foregroundStyle(control.isEnabled ? theme.text.primary : theme.text.disabled)
                         .lineLimit(1)
 
@@ -2273,7 +2273,7 @@ private struct SelectListControl: View {
         VStack(alignment: .leading, spacing: 3) {
             if let title = control.sectionTitle {
                 Text(title)
-                    .font(.system(size: 10.5, weight: .medium))
+                    .font(PluginPanelTheme.Typography.rowDescription)
                     .foregroundStyle(control.isEnabled ? theme.text.secondary : theme.text.disabled)
                     .padding(.leading, 5)
                     .padding(.bottom, 1)
@@ -2289,7 +2289,7 @@ private struct SelectListControl: View {
                     )
                 }
             }
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.control, style: .continuous))
         }
     }
 }
@@ -2313,13 +2313,13 @@ private struct SelectListRow: View {
         } label: {
             HStack(spacing: 7) {
                 Image(systemName: "checkmark")
-                    .font(.system(size: 10, weight: .semibold))
+                    .font(PluginPanelTheme.Symbol.chevron)
                     .foregroundStyle(isEnabled ? theme.accent : theme.text.disabled)
                     .opacity(isSelected ? 1 : 0)
                     .frame(width: 12)
 
                 Text(title)
-                    .font(.system(size: 11.5))
+                    .font(PluginPanelTheme.Typography.optionLabel)
                     .foregroundStyle(isEnabled ? theme.text.primary : theme.text.disabled)
 
                 Spacer()
@@ -2328,7 +2328,7 @@ private struct SelectListRow: View {
             .padding(.vertical, MenuBarPanelLayout.selectRowVerticalPadding)
             .contentShape(Rectangle())
             .background(alignment: .center) {
-                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.control, style: .continuous)
                     .inset(by: MenuBarHoverStyle.inset)
                     .fill(isInteractive && isHovered ? theme.surfaces.hover : Color.clear)
             }
@@ -2354,7 +2354,7 @@ private struct NavigationListControl: View {
         VStack(alignment: .leading, spacing: MenuBarPanelLayout.navigationSectionTitleSpacing) {
             if let sectionTitle = control.sectionTitle {
                 Text(sectionTitle)
-                    .font(.system(size: 10.5, weight: .medium))
+                    .font(PluginPanelTheme.Typography.rowDescription)
                     .foregroundStyle(control.isEnabled ? theme.text.secondary : theme.text.disabled)
                     .padding(.leading, FeatureRowLayout.detailControlHorizontalPadding + 5)
             }
@@ -2420,7 +2420,7 @@ private struct NavigationListRow: View {
             HStack(spacing: 8) {
                 if let leadingIconSystemName {
                     Image(systemName: leadingIconSystemName)
-                        .font(.system(size: 13, weight: .semibold))
+                        .font(PluginPanelTheme.Symbol.row)
                         .foregroundStyle(isEnabled ? leadingIconTint : theme.text.disabled)
                         .frame(width: 16)
                         .accessibilityHidden(true)
@@ -2428,12 +2428,12 @@ private struct NavigationListRow: View {
 
                 VStack(alignment: .leading, spacing: 1) {
                     Text(title)
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(PluginPanelTheme.Typography.controlTitle)
                         .foregroundStyle(isEnabled ? theme.text.primary : theme.text.disabled)
 
                     if let subtitle {
                         Text(subtitle)
-                            .font(.system(size: 10.5, weight: .medium))
+                            .font(PluginPanelTheme.Typography.rowDescription)
                             .foregroundStyle(isEnabled ? theme.text.secondary : theme.text.disabled)
                     }
                 }
@@ -2441,7 +2441,7 @@ private struct NavigationListRow: View {
                 Spacer()
 
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 9.5, weight: .semibold))
+                    .font(PluginPanelTheme.Symbol.chevron)
                     .foregroundStyle(isEnabled ? theme.text.secondary : theme.text.disabled)
                     .opacity(isSelected ? 1 : (isHovered ? 0.55 : 0.35))
             }
@@ -2509,7 +2509,7 @@ private struct SliderControl: View {
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
                     if let title = control.sectionTitle, !title.isEmpty {
                         Text(title)
-                            .font(.system(size: 12.5, weight: .semibold))
+                            .font(PluginPanelTheme.Typography.controlTitle)
                             .foregroundStyle(control.isEnabled ? theme.text.primary : theme.text.disabled)
                             .lineLimit(1)
                     }
@@ -2518,7 +2518,7 @@ private struct SliderControl: View {
 
                     if let valueLabel = control.valueLabel {
                         Text(valueLabel)
-                            .font(.system(size: 10.5, weight: .medium))
+                            .font(PluginPanelTheme.Typography.rowDescription)
                             .foregroundStyle(control.isEnabled ? theme.text.secondary : theme.text.disabled)
                     }
                 }
@@ -2621,11 +2621,11 @@ private struct SliderAccessoryButton: View {
     var body: some View {
         Button(action: action) {
             Image(systemName: systemName)
-                .font(.system(size: 12, weight: .medium))
+                .font(PluginPanelTheme.Symbol.control.weight(.medium))
                 .foregroundStyle(foregroundStyle)
                 .frame(width: 22, height: 18)
                 .background {
-                    RoundedRectangle(cornerRadius: 5, style: .continuous)
+                    RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.field, style: .continuous)
                         .fill(isHovered ? theme.surfaces.hover : Color.clear)
                 }
                 .contentShape(Rectangle())
@@ -2662,7 +2662,7 @@ private struct SecondarySlidingPanel: View {
                 if showsDismissButton {
                     Button(action: { onDismiss?() }) {
                         Image(systemName: "chevron.left")
-                            .font(.system(size: 11, weight: .semibold))
+                            .font(PluginPanelTheme.Symbol.caption)
                             .frame(width: 18, height: 18)
                     }
                     .buttonStyle(.plain)
@@ -2675,7 +2675,7 @@ private struct SecondarySlidingPanel: View {
                 }
 
                 Text(title)
-                    .font(.system(size: 12, weight: .semibold))
+                    .font(PluginPanelTheme.Typography.controlTitle)
                     .foregroundStyle(theme.text.primary)
                     .lineLimit(1)
 

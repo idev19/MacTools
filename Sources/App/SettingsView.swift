@@ -8,7 +8,7 @@ enum GeneralSettingsCardLayout {
     static let horizontalPadding: CGFloat = 8
     static let verticalPadding: CGFloat = 4
     static let iconSize: CGFloat = 30
-    static let iconCornerRadius: CGFloat = 8
+    static let iconCornerRadius: CGFloat = PluginSettingsTheme.Radius.control
     static let headerSpacing: CGFloat = 16
     static let minRowHeight: CGFloat = 38
 }
@@ -2328,7 +2328,7 @@ struct PreferencesImportPreviewSheet: View {
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
+            RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.card, style: .continuous)
                 .fill(Color.accentColor.opacity(0.08))
         )
         .accessibilityElement(children: .combine)
@@ -3652,10 +3652,10 @@ private struct SettingsSidebarRow: View {
 
 private struct SettingsSidebarKeyboardCandidateBackground: View {
     var body: some View {
-        RoundedRectangle(cornerRadius: 5, style: .continuous)
+        RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.field, style: .continuous)
             .fill(Color(nsColor: .unemphasizedSelectedContentBackgroundColor))
             .overlay {
-                RoundedRectangle(cornerRadius: 5, style: .continuous)
+                RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.field, style: .continuous)
                     .stroke(
                         Color(nsColor: .keyboardFocusIndicatorColor),
                         lineWidth: PluginSettingsTheme.Stroke.standard
@@ -5340,7 +5340,7 @@ private struct AppIconPreview: View {
                 .foregroundStyle(.secondary)
                 .background(PluginSettingsTheme.Palette.recessedControlBackground)
                 .frame(width: Self.iconSize, height: Self.iconSize)
-                .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.appIcon(for: Self.iconSize), style: .continuous))
         }
     }
 }

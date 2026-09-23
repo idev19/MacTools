@@ -105,11 +105,11 @@ struct SettingsSearchFilterBar<Filters: View>: View {
         .padding(.horizontal, 10)
         .padding(.vertical, 7)
         .background(
-            RoundedRectangle(cornerRadius: 8, style: .continuous)
+            RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.control, style: .continuous)
                 .fill(SettingsStyle.fieldBackground)
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 8, style: .continuous)
+            RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.control, style: .continuous)
                 .strokeBorder(Color(nsColor: .separatorColor).opacity(0.4), lineWidth: 1)
         )
     }

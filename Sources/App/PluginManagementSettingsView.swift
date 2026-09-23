@@ -624,7 +624,7 @@ private struct PluginManagementRow: View {
     @ViewBuilder
     private var pluginIcon: some View {
         let icon = ZStack {
-            RoundedRectangle(cornerRadius: 8, style: .continuous)
+            RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.control, style: .continuous)
                 .fill(statusColor.opacity(0.14))
 
             Image(systemName: statusImageName)
@@ -638,7 +638,7 @@ private struct PluginManagementRow: View {
                 icon
             }
             .buttonStyle(.plain)
-            .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.control, style: .continuous))
             .help(AppL10n.pluginsFormat(
                 "plugin.management.openSettingsForPlugin",
                 defaultValue: "打开%@设置",

@@ -225,7 +225,7 @@ struct ActionShortcutSettingsView: View {
     private var appIntentsCard: some View {
         HStack(alignment: .center, spacing: PluginSettingsTheme.Spacing.rowContentControl) {
             Image(systemName: "square.stack.3d.up.fill")
-                .font(.system(size: 22, weight: .semibold))
+                .font(PluginSettingsTheme.Typography.pageSymbol)
                 .foregroundStyle(.purple)
                 .frame(width: 34, height: 34)
 
@@ -359,7 +359,7 @@ struct ActionShortcutSettingsView: View {
                         pluginHost.presentActionOwner(for: ownerReference)
                     } label: {
                         Image(systemName: "arrow.up.right.square")
-                            .font(.system(size: 11, weight: .semibold))
+                            .font(PluginSettingsTheme.Typography.secondaryLabel.weight(.semibold))
                             .frame(width: 18, height: 18)
                     }
                     .buttonStyle(.plain)

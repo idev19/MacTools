@@ -100,7 +100,7 @@ struct PanelComponentLibrary: View {
                     ForEach(items) { item in
                         HStack(spacing: 9) {
                             Image(systemName: PluginSystemImage.resolvedName(item.iconName))
-                                .font(.system(size: 17)).foregroundStyle(item.iconTint)
+                                .font(PluginSettingsTheme.Typography.cardSymbol).foregroundStyle(item.iconTint)
                                 .frame(width: 23, height: 28)
                             Text(item.title).lineLimit(1)
                         }
@@ -174,7 +174,7 @@ struct PanelComponentLibrary: View {
     private var closeButton: some View {
         Button(action: close) {
             Image(systemName: "xmark.circle.fill")
-                .font(.system(size: 20, weight: .semibold))
+                .font(PluginSettingsTheme.Typography.cardSymbol.weight(.semibold))
                 .symbolRenderingMode(.hierarchical)
                 .frame(width: 28, height: 28)
                 .contentShape(Circle())

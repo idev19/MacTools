@@ -44,7 +44,35 @@ public enum PluginSettingsTheme {
         }
 
         public static var monospacedValue: Font {
-            .system(size: 12, design: .monospaced)
+            .callout.monospaced()
+        }
+
+        public static var compactMonospacedValue: Font {
+            .subheadline.monospaced()
+        }
+
+        /// Card titles in galleries and pickers.
+        public static var cardTitle: Font {
+            .callout.weight(.semibold)
+        }
+
+        public static var cardSubtitle: Font {
+            .caption2
+        }
+
+        /// Large empty-state and overlay glyphs.
+        public static var heroSymbol: Font {
+            .largeTitle.weight(.medium)
+        }
+
+        /// Glyphs that lead a page-level card.
+        public static var pageSymbol: Font {
+            .title.weight(.semibold)
+        }
+
+        /// Glyphs that lead a card row, and close buttons on floating cards.
+        public static var cardSymbol: Font {
+            .title2
         }
     }
 
@@ -61,11 +89,31 @@ public enum PluginSettingsTheme {
         public static let controlCluster: CGFloat = 8
     }
 
+    /// One radius scale for every surface: each step is a role, not a number to tune per view.
     public enum Radius {
-        public static let card: CGFloat = 10
-        public static let hostCard: CGFloat = 12
-        public static let control: CGFloat = 8
+        /// Tags, keycaps, and other tiny chips.
+        public static let chip: CGFloat = 4
+        /// Text fields, keyboard candidates, and small icon-button hover backgrounds.
         public static let field: CGFloat = 6
+        /// Controls, list rows, hover backgrounds, and inline icon tiles.
+        public static let control: CGFloat = 8
+        /// Standalone settings cards, search fields, and gallery previews.
+        public static let card: CGFloat = 10
+        /// Host cards, the menu bar panel, widget cards, and tiles inside overlays.
+        public static let hostCard: CGFloat = 12
+        /// Floating overlays such as palettes, the action grid, and run-link feedback.
+        public static let overlay: CGFloat = 16
+
+        /// Concentric corners: a shape inset from a rounded parent keeps the parent's
+        /// corner center by subtracting the inset, never falling below `chip`.
+        public static func nested(_ outer: CGFloat, inset: CGFloat) -> CGFloat {
+            max(outer - inset, chip)
+        }
+
+        /// The macOS app icon corner, 22.37% of the icon size.
+        public static func appIcon(for size: CGFloat) -> CGFloat {
+            (size * 0.2237).rounded()
+        }
     }
 
     public enum Stroke {

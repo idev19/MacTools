@@ -146,9 +146,9 @@ struct MenuBarIconSettingsView: View {
         )
         .frame(width: 34, height: PluginSettingsTheme.Size.controlHeight)
         .background(Color(nsColor: .controlBackgroundColor))
-        .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.field, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 6, style: .continuous)
+            RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.field, style: .continuous)
                 .strokeBorder(Color.primary.opacity(0.1), lineWidth: 1)
         )
         .help(AppL10n.settings("menuBarIcon.title", defaultValue: "菜单栏图标"))
@@ -442,9 +442,9 @@ private struct MenuBarIconGalleryAssetCell: View {
                     height: MenuBarIconSettingsMetrics.galleryTileSize.height
                 )
                 .background(Color(nsColor: .controlBackgroundColor))
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.control, style: .continuous))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.control, style: .continuous)
                         .strokeBorder(borderColor, lineWidth: isSelected ? 2 : 1)
                 )
                 .overlay(alignment: .topTrailing) {
@@ -499,13 +499,13 @@ private struct MenuBarIconGalleryAssetCell: View {
             switch state {
             case .cached:
                 Image(systemName: "checkmark.circle.fill")
-                    .font(.system(size: 13, weight: .bold))
+                    .font(PluginPanelTheme.Symbol.row.weight(.bold))
                     .foregroundStyle(isSelected ? Color.accentColor : .secondary)
                     .background(Color(nsColor: .windowBackgroundColor))
                     .clipShape(Circle())
             case .failed:
                 Image(systemName: "exclamationmark.circle.fill")
-                    .font(.system(size: 13, weight: .bold))
+                    .font(PluginPanelTheme.Symbol.row.weight(.bold))
                     .foregroundStyle(.orange)
                     .background(Color(nsColor: .windowBackgroundColor))
                     .clipShape(Circle())
@@ -517,7 +517,7 @@ private struct MenuBarIconGalleryAssetCell: View {
                     .clipShape(Circle())
             case .available:
                 Image(systemName: "icloud.and.arrow.down")
-                    .font(.system(size: 11, weight: .semibold))
+                    .font(PluginPanelTheme.Symbol.caption)
                     .foregroundStyle(.secondary)
                     .frame(width: 16, height: 16)
                     .background(Color(nsColor: .windowBackgroundColor))
@@ -561,7 +561,7 @@ private struct MenuBarIconThumbnail: View {
                     .frame(height: height)
             } else {
                 Image(systemName: "photo")
-                    .font(.system(size: 15, weight: .medium))
+                    .font(.title3.weight(.medium))
                     .foregroundStyle(.secondary)
                     .frame(width: height, height: height)
             }

@@ -164,7 +164,7 @@ private struct RunLinkFeedbackView: View {
             height: feedback.presentation.size.height
         )
         .background {
-            RoundedRectangle(cornerRadius: 14)
+            RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.overlay, style: .continuous)
                 .fill(
                     reduceTransparency
                         ? AnyShapeStyle(Color(nsColor: .windowBackgroundColor))

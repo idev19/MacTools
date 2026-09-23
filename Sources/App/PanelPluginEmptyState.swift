@@ -10,11 +10,11 @@ struct PanelPluginEmptyState: View {
         VStack(spacing: 10) {
             VStack(spacing: 6) {
                 Image(systemName: PluginSystemImage.resolvedName(tab.systemImage))
-                    .font(.system(size: 26, weight: .semibold))
+                    .font(PluginPanelTheme.Symbol.hero.weight(.semibold))
                     .foregroundStyle(theme.text.secondary)
 
                 Text(AppL10n.plugins("plugin.panel.empty.title", defaultValue: "暂无插件"))
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(PluginPanelTheme.Typography.emptyStateTitle)
             }
 
             installButton
@@ -26,7 +26,7 @@ struct PanelPluginEmptyState: View {
     private var installButton: some View {
         Button(action: onInstall) {
             Text(AppL10n.plugins("plugin.empty.install", defaultValue: "去安装"))
-                .font(.system(size: 12, weight: .medium))
+                .font(PluginPanelTheme.Typography.controlLabel)
                 .foregroundStyle(theme.accent)
         }
             .buttonStyle(.link)
