@@ -4,22 +4,23 @@ import SwiftUI
 ///
 /// Panel rows read like a menu, so this scale uses fixed point sizes that keep
 /// rows stable instead of the semantic, user-scalable settings scale in
-/// `PluginSettingsTheme.Typography`. Hierarchy comes from weight and size as a
-/// set: one semibold row title, a medium description a step below, and small
-/// semibold badges. Symbols share the same steps so an icon never outweighs the
-/// text beside it.
+/// `PluginSettingsTheme.Typography`. The scale is whole points only, 13 / 12 /
+/// 11 / 10 / 9 under a 14 pt heading, so every step is visibly different from
+/// its neighbors. Hierarchy comes from weight and size as a set: one semibold
+/// row title, a medium description a step below, and small semibold badges.
+/// Symbols share the same steps so an icon never outweighs the text beside it.
 public enum PluginPanelTheme {
     public enum Typography {
         /// The row's name; the only semibold 13 pt text in a row.
         public static var rowTitle: Font { .system(size: 13, weight: .semibold) }
         /// Descriptions, section titles, and subtitles under a row title.
-        public static var rowDescription: Font { .system(size: 10.5, weight: .medium) }
+        public static var rowDescription: Font { .system(size: 11, weight: .medium) }
         /// Emphasized control or section titles inside a row.
         public static var controlTitle: Font { .system(size: 12, weight: .semibold) }
         /// Button and control labels.
         public static var controlLabel: Font { .system(size: 12, weight: .medium) }
         /// Options in a select list.
-        public static var optionLabel: Font { .system(size: 11.5) }
+        public static var optionLabel: Font { .system(size: 11) }
         /// Secondary single-line notes.
         public static var caption: Font { .system(size: 11) }
         /// Titles under icon widgets.
@@ -27,9 +28,9 @@ public enum PluginPanelTheme {
         /// Keycap glyphs in palettes.
         public static var keycap: Font { .system(size: 10, weight: .semibold, design: .rounded) }
         /// Inline indicators and counters.
-        public static var badge: Font { .system(size: 8.5, weight: .semibold) }
+        public static var badge: Font { .system(size: 9, weight: .semibold) }
         /// Fixed-width readings beside a row.
-        public static var monospacedValue: Font { .system(size: 9.5, weight: .medium, design: .monospaced) }
+        public static var monospacedValue: Font { .system(size: 10, weight: .medium, design: .monospaced) }
         /// Empty-state headings inside the panel.
         public static var emptyStateTitle: Font { .system(size: 14, weight: .semibold) }
     }

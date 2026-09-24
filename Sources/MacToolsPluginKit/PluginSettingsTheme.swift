@@ -153,16 +153,18 @@ public enum PluginSettingsTheme {
         }
 
         // Washes: one short scale so every resting tile, hover, press, and
-        // selection reads as the same material at a different weight.
+        // selection reads as the same material at a different weight. Resting,
+        // hover, and press are three distinct steps (4%, 6%, 10%) so a chip
+        // under the pointer visibly changes and a press is heavier still.
 
         /// A resting tile or chip on a solid surface.
         public static var chipBackground: Color {
-            Color.primary.opacity(0.05)
+            Color.primary.opacity(0.04)
         }
 
         /// Rows, cells, and cards under the pointer.
         public static var hoverBackground: Color {
-            Color.primary.opacity(0.05)
+            Color.primary.opacity(0.06)
         }
 
         /// Hover on translucent material, which needs a heavier wash to show.
