@@ -896,11 +896,10 @@ struct ActivityBarComponentView: View {
                                             .font(.system(size: 9))
                                             .foregroundStyle(theme.text.secondary)
                                         HStack(spacing: 6) {
-                                            Text("\(day.keystrokes)").foregroundStyle(theme.dataSeries.primary)
-                                            Text("\(day.pointerClicks)").foregroundStyle(theme.dataSeries.secondary)
-                                            Text("\(day.scrollEvents)").foregroundStyle(theme.dataSeries.tertiary)
+                                            hoverValue(day.keystrokes, color: theme.dataSeries.primary)
+                                            hoverValue(day.pointerClicks, color: theme.dataSeries.secondary)
+                                            hoverValue(day.scrollEvents, color: theme.dataSeries.tertiary)
                                         }
-                                        .font(.system(size: 10).bold().monospacedDigit())
                                     }
                                     .padding(.horizontal, 6)
                                     .padding(.vertical, 3)
@@ -1051,6 +1050,19 @@ struct ActivityBarComponentView: View {
                 }
                 .buttonStyle(.plain)
             }
+        }
+    }
+
+    /// Values wear text ink; the series dot beside them carries identity.
+    private func hoverValue(_ value: Int, color: Color) -> some View {
+        HStack(spacing: 3) {
+            Circle()
+                .fill(color)
+                .frame(width: 5, height: 5)
+
+            Text("\(value)")
+                .font(.system(size: 10).bold().monospacedDigit())
+                .foregroundStyle(theme.text.primary)
         }
     }
 

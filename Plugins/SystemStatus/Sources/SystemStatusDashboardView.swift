@@ -206,8 +206,8 @@ struct SystemStatusDashboardView: View {
         return SystemStatusHUDValueTile(
             eyebrow: "CPU",
             glyph: "cpu",
-            accent: theme.dataSeries.tertiary,
-            chartColor: theme.dataSeries.tertiary,
+            accent: theme.dataSeries.primary,
+            chartColor: theme.dataSeries.primary,
             value: value.value,
             unit: value.unit,
             chip: temperatureChip(snapshot.cpu.temperatureCelsius),
@@ -227,8 +227,8 @@ struct SystemStatusDashboardView: View {
         return SystemStatusHUDValueTile(
             eyebrow: "GPU",
             glyph: "cpu.fill",
-            accent: theme.dataSeries.secondary,
-            chartColor: theme.dataSeries.secondary,
+            accent: theme.dataSeries.primary,
+            chartColor: theme.dataSeries.primary,
             value: value.value,
             unit: value.unit,
             chip: temperatureChip(snapshot.gpu.temperatureCelsius),
@@ -246,8 +246,8 @@ struct SystemStatusDashboardView: View {
         return SystemStatusHUDValueTile(
             eyebrow: SystemStatusMetricKind.memory.title(localization: localization),
             glyph: "memorychip",
-            accent: theme.dataSeries.senary,
-            chartColor: theme.dataSeries.senary,
+            accent: theme.dataSeries.primary,
+            chartColor: theme.dataSeries.primary,
             value: value.value,
             unit: value.unit,
             chip: memoryChip,
@@ -275,7 +275,7 @@ struct SystemStatusDashboardView: View {
             writeLabel: diskWriteLabel,
             rangeLabel: chartRangeLabel,
             readColor: theme.dataSeries.primary,
-            writeColor: theme.dataSeries.quaternary
+            writeColor: theme.dataSeries.secondary
         )
         .accessibilityElement(children: .combine)
         .accessibilityLabel(
@@ -295,7 +295,7 @@ struct SystemStatusDashboardView: View {
         return SystemStatusHUDMetricTile(
             title: SystemStatusMetricKind.network.title(localization: localization),
             glyph: "network",
-            accent: theme.dataSeries.quinary,
+            accent: theme.dataSeries.primary,
             value: rate.value,
             unit: rate.unit,
             chip: networkChip,
@@ -2177,7 +2177,7 @@ struct SystemStatusMetricDetailView: View {
             SystemStatusHUDRateChart(
                 samples: chartData.rateSamples,
                 firstColor: theme.dataSeries.primary,
-                secondColor: theme.dataSeries.quaternary,
+                secondColor: theme.dataSeries.secondary,
                 firstLabel: localization.string("chart.disk.readCompact", defaultValue: "读"),
                 secondLabel: localization.string("chart.disk.writeCompact", defaultValue: "写"),
                 valueFormatter: rateFormatter,
@@ -2239,7 +2239,7 @@ struct SystemStatusMetricDetailView: View {
                     : localization.string("chart.disk.readCompact", defaultValue: "读")
             )
             legendItem(
-                color: kind == .network ? theme.dataSeries.secondary : theme.dataSeries.quaternary,
+                color: theme.dataSeries.secondary,
                 label: kind == .network
                     ? "↑"
                     : localization.string("chart.disk.writeCompact", defaultValue: "写")
@@ -2352,14 +2352,10 @@ struct SystemStatusMetricDetailView: View {
         }
     }
 
+    /// Every metric detail is one series, so it wears the first slot; identity comes from the title.
     private var accentColor: Color {
         switch kind {
-        case .cpu: return theme.dataSeries.tertiary
-        case .gpu: return theme.dataSeries.secondary
-        case .memory: return theme.dataSeries.senary
-        case .battery: return theme.dataSeries.tertiary
-        case .network: return theme.dataSeries.quinary
-        case .disk: return theme.dataSeries.primary
+        case .cpu, .gpu, .memory, .battery, .network, .disk: return theme.dataSeries.primary
         case .topProcesses: return theme.text.secondary
         }
     }

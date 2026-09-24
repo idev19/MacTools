@@ -169,7 +169,7 @@ struct AIUsageComponentView: View {
     }
 
     private func accent(for provider: AIUsageProvider) -> Color {
-        provider == .codex ? theme.dataSeries.primary : theme.dataSeries.quaternary
+        provider == .codex ? theme.dataSeries.primary : theme.dataSeries.secondary
     }
 
     private func resetHelp(_ window: AIUsageWindow) -> String {
