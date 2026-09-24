@@ -398,7 +398,7 @@ public struct PluginPaletteSearchChrome: ViewModifier {
             .overlay {
                 if increasedContrast {
                     RoundedRectangle(cornerRadius: PluginPaletteMetrics.searchCornerRadius, style: .continuous)
-                        .strokeBorder(Color.primary.opacity(0.7), lineWidth: 1)
+                        .strokeBorder(PluginSettingsTheme.Palette.contrastBorder, lineWidth: 1)
                         .allowsHitTesting(false)
                 }
             }
@@ -648,7 +648,7 @@ public struct PluginPaletteSelectableRowModifier: ViewModifier {
         if isSelected {
             return Color(nsColor: .selectedContentBackgroundColor)
         }
-        return isHovered ? Color.primary.opacity(0.09) : .clear
+        return isHovered ? PluginSettingsTheme.Palette.materialHoverBackground : .clear
     }
 }
 
@@ -690,7 +690,7 @@ private struct PluginPaletteToolbarControlStyleBody: View {
             .overlay {
                 if contrast == .increased {
                     RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.control, style: .continuous)
-                        .strokeBorder(Color.primary.opacity(isEnabled ? 0.7 : 0.3), lineWidth: 1)
+                        .strokeBorder(PluginSettingsTheme.Palette.contrastBorder.opacity(isEnabled ? 1 : 0.45), lineWidth: 1)
                         .allowsHitTesting(false)
                 }
             }

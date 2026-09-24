@@ -585,7 +585,7 @@ private struct ActionShortcutCatalogRow: View {
             .foregroundStyle(statusColor)
             .padding(.horizontal, 7)
             .padding(.vertical, 2)
-            .background(Capsule().fill(statusColor.opacity(0.12)))
+            .background(Capsule().fill(PluginSettingsTheme.Palette.tintBackground(statusColor)))
     }
 
     private var statusTitle: String {

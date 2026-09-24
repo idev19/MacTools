@@ -133,7 +133,7 @@ struct MarketplacePluginDetailView: View {
                 .font(.title2.weight(.semibold))
                 .foregroundStyle(headerColor(for: presentation.item.state))
                 .frame(width: 44, height: 44)
-                .background(headerColor(for: presentation.item.state).opacity(0.12), in: RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.card, style: .continuous))
+                .background(PluginSettingsTheme.Palette.tintBackground(headerColor(for: presentation.item.state)), in: RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.card, style: .continuous))
                 .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 5) {
@@ -271,7 +271,7 @@ struct MarketplacePluginDetailView: View {
                 .foregroundStyle(.secondary)
         }
         .padding(8)
-        .background(highlighted ? Color.accentColor.opacity(0.12) : .clear, in: RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.control, style: .continuous))
+        .background(highlighted ? PluginSettingsTheme.Palette.selectionBackground : .clear, in: RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.control, style: .continuous))
         .id(actionScrollID(providerID: providerID, actionID: action.id))
         .accessibilityFocused(
             $highlightedActionID,

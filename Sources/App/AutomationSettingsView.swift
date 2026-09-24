@@ -1724,7 +1724,7 @@ private struct WorkflowStepEditor: View {
                 Text("\(index + 1)")
                     .font(PluginSettingsTheme.Typography.statusBadge)
                     .frame(width: 22, height: 22)
-                    .background(Circle().fill(Color.accentColor.opacity(0.14)))
+                    .background(Circle().fill(PluginSettingsTheme.Palette.tintBackground(.accentColor)))
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(actionTitle)
@@ -1943,7 +1943,7 @@ private struct WorkflowRunPreviewSheet: View {
             Text("\(index + 1)")
                 .font(PluginSettingsTheme.Typography.statusBadge)
                 .frame(width: 22, height: 22)
-                .background(Circle().fill(Color.accentColor.opacity(0.14)))
+                .background(Circle().fill(PluginSettingsTheme.Palette.tintBackground(.accentColor)))
             VStack(alignment: .leading, spacing: 3) {
                 Text(step.label ?? definition?.title ?? step.reference.key.id)
                     .font(PluginSettingsTheme.Typography.emphasizedRowTitle)

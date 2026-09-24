@@ -80,7 +80,7 @@ struct MenuBarIconSettingsView: View {
         HStack(spacing: GeneralSettingsCardLayout.headerSpacing) {
             ZStack {
                 RoundedRectangle(cornerRadius: GeneralSettingsCardLayout.iconCornerRadius, style: .continuous)
-                    .fill(Color.accentColor.opacity(0.12))
+                    .fill(PluginSettingsTheme.Palette.tintBackground(.accentColor))
 
                 Image(systemName: "menubar.rectangle")
                     .font(PluginSettingsTheme.Typography.pageDescription.weight(.semibold))
@@ -149,7 +149,7 @@ struct MenuBarIconSettingsView: View {
         .clipShape(RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.field, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.field, style: .continuous)
-                .strokeBorder(Color.primary.opacity(0.1), lineWidth: 1)
+                .strokeBorder(PluginSettingsTheme.Palette.hairlineBorder, lineWidth: 1)
         )
         .help(AppL10n.settings("menuBarIcon.title", defaultValue: "菜单栏图标"))
         .accessibilityLabel(AppL10n.settings("menuBarIcon.title", defaultValue: "菜单栏图标"))
@@ -541,7 +541,7 @@ private struct MenuBarIconGalleryAssetCell: View {
     }
 
     private var borderColor: Color {
-        isSelected ? .accentColor : Color.primary.opacity(0.1)
+        isSelected ? .accentColor : PluginSettingsTheme.Palette.hairlineBorder
     }
 }
 

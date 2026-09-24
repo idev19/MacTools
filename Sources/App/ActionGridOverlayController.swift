@@ -1330,9 +1330,9 @@ private struct ActionGridOverlayView: View {
         .overlay {
             RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.overlay, style: .continuous)
                 .strokeBorder(
-                    Color(nsColor: .separatorColor).opacity(
-                        colorSchemeContrast == .increased ? 0.80 : 0.45
-                    ),
+                    colorSchemeContrast == .increased
+                        ? PluginSettingsTheme.Palette.contrastBorder
+                        : PluginSettingsTheme.Palette.subtleBorder,
                     lineWidth: colorSchemeContrast == .increased ? 1.5 : 1
                 )
                 .allowsHitTesting(false)
@@ -1373,7 +1373,7 @@ private struct ActionGridOverlayView: View {
         let shape = RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.hostCard, style: .continuous)
         return shape
             .fill(selected
-                ? Color.accentColor.opacity(0.08)
+                ? PluginSettingsTheme.Palette.emphasisBackground
                 : Color(nsColor: .controlBackgroundColor).opacity(
                     accessibilityPolicy.usesMaterialBackground && colorSchemeContrast != .increased
                         ? 0.72
@@ -1381,7 +1381,7 @@ private struct ActionGridOverlayView: View {
                 ))
             .overlay {
                 if hovered, !selected {
-                    shape.fill(Color.primary.opacity(0.045))
+                    shape.fill(PluginSettingsTheme.Palette.hoverBackground)
                 }
             }
             .overlay {

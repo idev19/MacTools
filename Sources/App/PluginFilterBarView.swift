@@ -110,7 +110,7 @@ struct SettingsSearchFilterBar<Filters: View>: View {
         )
         .overlay(
             RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.control, style: .continuous)
-                .strokeBorder(Color(nsColor: .separatorColor).opacity(0.4), lineWidth: 1)
+                .strokeBorder(PluginSettingsTheme.Palette.subtleBorder, lineWidth: 1)
         )
     }
 

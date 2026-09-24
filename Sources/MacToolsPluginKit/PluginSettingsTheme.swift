@@ -152,20 +152,98 @@ public enum PluginSettingsTheme {
             Color(nsColor: .separatorColor)
         }
 
-        public static var sidebarHoverBackground: Color {
+        // Washes: one short scale so every resting tile, hover, press, and
+        // selection reads as the same material at a different weight.
+
+        /// A resting tile or chip on a solid surface.
+        public static var chipBackground: Color {
             Color.primary.opacity(0.05)
         }
 
-        public static var sidebarSelectionBackground: Color {
+        /// Rows, cells, and cards under the pointer.
+        public static var hoverBackground: Color {
+            Color.primary.opacity(0.05)
+        }
+
+        /// Hover on translucent material, which needs a heavier wash to show.
+        public static var materialHoverBackground: Color {
+            Color.primary.opacity(0.10)
+        }
+
+        /// Pressed controls.
+        public static var pressedBackground: Color {
+            Color.primary.opacity(0.10)
+        }
+
+        /// The current selection and active controls.
+        public static var selectionBackground: Color {
             Color.accentColor.opacity(0.12)
+        }
+
+        /// Callouts and selected tiles that should stay quieter than a selection.
+        public static var emphasisBackground: Color {
+            Color.accentColor.opacity(0.08)
+        }
+
+        /// The tile behind a tinted icon or a status badge; the tint comes from the icon.
+        public static func tintBackground(_ color: Color) -> Color {
+            color.opacity(0.12)
+        }
+
+        // Borders, from the quietest ring to the strongest.
+
+        /// A hairline ring that separates a tile from its surface.
+        public static var hairlineBorder: Color {
+            Color.primary.opacity(0.10)
+        }
+
+        /// A softened separator for framed fields and floating surfaces.
+        public static var subtleBorder: Color {
+            separator.opacity(0.45)
+        }
+
+        /// Accent ring on hovered selectable cards.
+        public static var hoverBorder: Color {
+            Color.accentColor.opacity(0.3)
+        }
+
+        /// Accent ring on the selected card.
+        public static var selectionBorder: Color {
+            Color.accentColor.opacity(0.8)
+        }
+
+        /// Rings under Increase Contrast, which must stay visible on any surface.
+        public static var contrastBorder: Color {
+            Color.primary.opacity(0.6)
+        }
+
+        public static var focusRing: Color {
+            Color(nsColor: .keyboardFocusIndicatorColor)
+        }
+
+        /// The backdrop behind a floating palette.
+        public static var scrim: Color {
+            Color.black.opacity(0.24)
+        }
+
+        public static var reducedTransparencyScrim: Color {
+            Color.black.opacity(0.30)
+        }
+
+        public static var sidebarHoverBackground: Color {
+            hoverBackground
+        }
+
+        public static var sidebarSelectionBackground: Color {
+            selectionBackground
         }
 
         public static var activeControlBackground: Color {
-            Color.accentColor.opacity(0.12)
+            selectionBackground
         }
 
         public static var recordingBackground: Color {
-            Color.accentColor.opacity(0.08)
+            emphasisBackground
         }
 
     }

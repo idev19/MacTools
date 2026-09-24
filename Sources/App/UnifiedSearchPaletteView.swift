@@ -283,7 +283,7 @@ struct UnifiedSearchPresentationView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Color.black.opacity(accessibilityReduceTransparency ? 0.30 : 0.24)
+                accessibilityReduceTransparency ? PluginSettingsTheme.Palette.reducedTransparencyScrim : PluginSettingsTheme.Palette.scrim
                     .ignoresSafeArea()
                     .contentShape(Rectangle())
                     .onTapGesture {
@@ -987,7 +987,7 @@ struct UnifiedSearchPaletteView: View {
                                 .fill(
                                     isSelected
                                         ? unifiedSearchSelectedRowTextColor.opacity(0.14)
-                                        : Color.primary.opacity(0.07)
+                                        : PluginSettingsTheme.Palette.chipBackground
                                 )
                         )
                 }

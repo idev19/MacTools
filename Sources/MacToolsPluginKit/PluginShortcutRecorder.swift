@@ -374,7 +374,7 @@ private struct PluginShortcutRecorderButton: View {
         .overlay {
             RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.field, style: .continuous)
                 .strokeBorder(
-                    Color.accentColor.opacity(isHovered && !isPresented ? 0.45 : 0),
+                    isHovered && !isPresented ? PluginSettingsTheme.Palette.hoverBorder : .clear,
                     lineWidth: PluginSettingsTheme.Stroke.standard
                 )
                 .allowsHitTesting(false)

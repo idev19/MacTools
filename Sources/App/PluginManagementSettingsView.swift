@@ -625,7 +625,7 @@ private struct PluginManagementRow: View {
     private var pluginIcon: some View {
         let icon = ZStack {
             RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.control, style: .continuous)
-                .fill(statusColor.opacity(0.14))
+                .fill(PluginSettingsTheme.Palette.tintBackground(statusColor))
 
             Image(systemName: statusImageName)
                 .font(PluginSettingsTheme.Typography.pageDescription.weight(.semibold))

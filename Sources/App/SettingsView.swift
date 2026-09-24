@@ -828,7 +828,7 @@ private struct CLISettingsRow: View {
                     cornerRadius: GeneralSettingsCardLayout.iconCornerRadius,
                     style: .continuous
                 )
-                .fill(Color.accentColor.opacity(0.12))
+                .fill(PluginSettingsTheme.Palette.tintBackground(.accentColor))
                 Image(systemName: "terminal")
                     .font(PluginSettingsTheme.Typography.pageDescription.weight(.semibold))
                     .foregroundStyle(Color.accentColor)
@@ -1040,7 +1040,7 @@ private struct AppShortcutSettingsRow: View {
     private var appIcon: some View {
         ZStack {
             RoundedRectangle(cornerRadius: GeneralSettingsCardLayout.iconCornerRadius, style: .continuous)
-                .fill(Color.accentColor.opacity(0.12))
+                .fill(PluginSettingsTheme.Palette.tintBackground(.accentColor))
 
             Image(systemName: item.systemImage)
                 .font(PluginSettingsTheme.Typography.pageDescription.weight(.semibold))
@@ -1138,7 +1138,7 @@ private struct PreferencesBackupSettingsRow: View {
             HStack(spacing: GeneralSettingsCardLayout.headerSpacing) {
                 ZStack {
                     RoundedRectangle(cornerRadius: GeneralSettingsCardLayout.iconCornerRadius, style: .continuous)
-                        .fill(Color.accentColor.opacity(0.12))
+                        .fill(PluginSettingsTheme.Palette.tintBackground(.accentColor))
 
                     Image(systemName: "externaldrive.badge.checkmark")
                         .font(PluginSettingsTheme.Typography.pageDescription.weight(.semibold))
@@ -2329,7 +2329,7 @@ struct PreferencesImportPreviewSheet: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.card, style: .continuous)
-                .fill(Color.accentColor.opacity(0.08))
+                .fill(PluginSettingsTheme.Palette.emphasisBackground)
         )
         .accessibilityElement(children: .combine)
     }
@@ -2556,7 +2556,7 @@ private struct AppearanceSettingsRow: View {
         HStack(spacing: GeneralSettingsCardLayout.headerSpacing) {
             ZStack {
                 RoundedRectangle(cornerRadius: GeneralSettingsCardLayout.iconCornerRadius, style: .continuous)
-                    .fill(Color.accentColor.opacity(0.12))
+                    .fill(PluginSettingsTheme.Palette.tintBackground(.accentColor))
 
                 Image(systemName: "circle.lefthalf.filled")
                     .font(PluginSettingsTheme.Typography.pageDescription.weight(.semibold))
@@ -2598,7 +2598,7 @@ private struct LanguageSettingsRow: View {
         HStack(spacing: GeneralSettingsCardLayout.headerSpacing) {
             ZStack {
                 RoundedRectangle(cornerRadius: GeneralSettingsCardLayout.iconCornerRadius, style: .continuous)
-                    .fill(Color.accentColor.opacity(0.12))
+                    .fill(PluginSettingsTheme.Palette.tintBackground(.accentColor))
 
                 Image(systemName: "globe")
                     .font(PluginSettingsTheme.Typography.pageDescription.weight(.semibold))
@@ -2643,7 +2643,7 @@ private struct LaunchAtLoginSettingsRow: View {
         HStack(spacing: GeneralSettingsCardLayout.headerSpacing) {
             ZStack {
                 RoundedRectangle(cornerRadius: GeneralSettingsCardLayout.iconCornerRadius, style: .continuous)
-                    .fill(Color.accentColor.opacity(0.12))
+                    .fill(PluginSettingsTheme.Palette.tintBackground(.accentColor))
 
                 Image(systemName: "power")
                     .font(PluginSettingsTheme.Typography.pageDescription.weight(.semibold))
@@ -2868,7 +2868,7 @@ private struct SettingsSidebarShortcutLabel: View {
                     .padding(.vertical, 1)
                     .background(
                         Capsule(style: .continuous)
-                            .fill(Color(nsColor: .quaternaryLabelColor).opacity(0.12))
+                            .fill(PluginSettingsTheme.Palette.chipBackground)
                     )
             }
         }
@@ -5219,7 +5219,7 @@ private struct AboutReleaseCard: View {
                     .foregroundStyle(.tint)
                     .padding(.horizontal, 7)
                     .padding(.vertical, 3)
-                    .background(Color.accentColor.opacity(0.12), in: Capsule())
+                    .background(PluginSettingsTheme.Palette.tintBackground(.accentColor), in: Capsule())
                 }
 
                 Spacer(minLength: 12)

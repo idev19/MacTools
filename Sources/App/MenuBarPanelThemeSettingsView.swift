@@ -21,7 +21,7 @@ struct MenuBarPanelThemeSettingsRow: View {
                             cornerRadius: GeneralSettingsCardLayout.iconCornerRadius,
                             style: .continuous
                         )
-                        .fill(Color.accentColor.opacity(0.12))
+                        .fill(PluginSettingsTheme.Palette.tintBackground(.accentColor))
 
                         Image(systemName: "paintpalette.fill")
                             .font(PluginSettingsTheme.Typography.pageDescription.weight(.semibold))
@@ -174,7 +174,7 @@ private struct MenuBarPanelThemeSwatch: View {
         .frame(width: 34, height: 25)
         .overlay {
             RoundedRectangle(cornerRadius: 6, style: .continuous)
-                .stroke(Color.primary.opacity(0.12), lineWidth: 0.5)
+                .stroke(PluginSettingsTheme.Palette.hairlineBorder, lineWidth: 0.5)
         }
         .environment(\.colorScheme, colorScheme)
         .accessibilityHidden(true)
@@ -420,12 +420,12 @@ private struct MenuBarPanelThemePickerSheet: View {
             }
         }
         .padding(10)
-        .background(Color.primary.opacity(isSelected ? 0.08 : 0.035))
+        .background(isSelected ? PluginSettingsTheme.Palette.emphasisBackground : PluginSettingsTheme.Palette.chipBackground)
         .clipShape(RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.hostCard, style: .continuous))
         .overlay {
             RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.hostCard, style: .continuous)
                 .stroke(
-                    isSelected ? Color.accentColor.opacity(0.8) : Color.primary.opacity(0.06),
+                    isSelected ? PluginSettingsTheme.Palette.selectionBorder : PluginSettingsTheme.Palette.hairlineBorder,
                     lineWidth: isSelected ? 1.5 : 0.5
                 )
         }

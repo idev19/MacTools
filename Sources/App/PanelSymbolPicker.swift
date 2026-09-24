@@ -215,7 +215,7 @@ struct PanelSymbolPicker: View {
                                     RoundedRectangle(cornerRadius: PluginSettingsTheme.Radius.control, style: .continuous)
                                         .fill(
                                             selected == symbol
-                                                ? Color.accentColor.opacity(0.15) : Color.primary.opacity(0.04))
+                                                ? PluginSettingsTheme.Palette.selectionBackground : PluginSettingsTheme.Palette.chipBackground)
                                 }
                                 .contentShape(Rectangle())
                         }

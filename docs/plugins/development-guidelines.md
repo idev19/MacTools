@@ -79,6 +79,10 @@ Two scales cover every surface, so no view restates a point size or a radius:
 
 Miniature previews (theme thumbnails) are drawings, not controls, and keep their own reduced sizes.
 
+### Surface washes and borders
+
+Interaction states share one short wash scale in `PluginSettingsTheme.Palette`, so a hover, press, or selection reads as the same material at a different weight instead of a per-view opacity: `chipBackground` and `hoverBackground` (a 5% wash), `pressedBackground` and `materialHoverBackground` (10%, for presses and for rows on translucent material), `emphasisBackground` (an 8% accent wash for callouts and selected tiles), `selectionBackground` (12% accent), and `tintBackground(_:)` for the tile behind a tinted icon or status badge, where the icon supplies the hue. Borders step from `hairlineBorder` and `subtleBorder` through `hoverBorder` and `selectionBorder` to `contrastBorder`, which Increase Contrast uses for every ring; keyboard focus uses `focusRing`, and palettes sit on `scrim`. Menu bar panel content keeps using the theme's `surfaces` and `interaction` palettes. Never write `Color.primary.opacity(…)` or `Color.accentColor.opacity(…)` in a view; add a named role here if none fits.
+
 ### Data colors
 
 `PluginComponentTheme.dataSeries` is the only source of chart colors. Every color does one job:

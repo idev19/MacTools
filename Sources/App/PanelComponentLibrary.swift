@@ -271,7 +271,7 @@ private struct PanelComponentLibrarySearchFieldStyle: ViewModifier {
         }
         .overlay {
             if contrast == .increased {
-                Capsule().strokeBorder(.primary.opacity(0.5), lineWidth: 1)
+                Capsule().strokeBorder(PluginSettingsTheme.Palette.contrastBorder, lineWidth: 1)
                     .allowsHitTesting(false)
             }
         }
@@ -318,7 +318,7 @@ private struct PanelComponentLibraryPreviewButtonStyle: ButtonStyle {
             configuration.label
                 .clipShape(shape)
                 .overlay {
-                    shape.fill(Color.accentColor.opacity(configuration.isPressed ? 0.08 : (isHovered ? 0.035 : 0)))
+                    shape.fill(configuration.isPressed ? PluginSettingsTheme.Palette.emphasisBackground : (isHovered ? PluginSettingsTheme.Palette.hoverBackground : .clear))
                         .allowsHitTesting(false)
                 }
                 .overlay {
@@ -334,9 +334,9 @@ private struct PanelComponentLibraryPreviewButtonStyle: ButtonStyle {
 
         private var borderColor: Color {
             if isHovered || configuration.isPressed {
-                return .accentColor.opacity(contrast == .increased ? 0.8 : 0.3)
+                return contrast == .increased ? PluginSettingsTheme.Palette.selectionBorder : PluginSettingsTheme.Palette.hoverBorder
             }
-            return contrast == .increased ? .primary.opacity(0.35) : Color(nsColor: .separatorColor).opacity(0.45)
+            return contrast == .increased ? PluginSettingsTheme.Palette.contrastBorder : PluginSettingsTheme.Palette.subtleBorder
         }
     }
 }
